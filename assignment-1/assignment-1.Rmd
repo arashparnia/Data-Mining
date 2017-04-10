@@ -1,0 +1,167 @@
+---
+title: "Data mining Assignment 1 R Notebook"
+output: data-miningassignment-1-html_notebook
+---
+
+<!-- This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+-->
+package installation
+
+```{r}
+rm(list = setdiff(ls(), lsf.str()))
+# Install
+install.packages("tm")  # for text mining
+install.packages("SnowballC") # for text stemming
+install.packages("wordcloud") # word-cloud generator 
+install.packages("RColorBrewer") # color palettes
+# Load
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+```
+
+
+
+loading the data 
+change the path based on your own path
+```{r}
+library(readr)
+
+#file_path = file.path( "~", "Google Drive","VU", "Data mining" ,"SmsCollection.csv")
+file_path = file.path( "ODI-2017.csv")
+ODI <- read.csv(file_path,header =TRUE,sep = ",",stringsAsFactors = TRUE,fill = TRUE)
+
+class(ODI)
+```
+showing number of rowes and columns
+```{r}
+dim(ODI) 
+```
+showing column names
+```{r}
+names(ODI) 
+```
+
+changing column names 
+```{r}
+colnames(ODI)[1] <- "time"
+colnames(ODI)[2] <- "program"
+colnames(ODI)[3] <- "machine_learning"
+colnames(ODI)[4] <- "information_retrival"
+colnames(ODI)[5] <- "stats"
+colnames(ODI)[6] <- "database"
+colnames(ODI)[7] <- "gender"
+colnames(ODI)[8] <- "chocolate"
+colnames(ODI)[9] <- "birthday"
+colnames(ODI)[10] <- "neighbors"
+colnames(ODI)[11] <- "stand"
+colnames(ODI)[12] <- "money"
+colnames(ODI)[13] <- "random"
+colnames(ODI)[14] <- "bed_time"
+colnames(ODI)[15] <- "good_day_1"
+colnames(ODI)[16] <- "good_day_2"
+              
+head(ODI)
+ODI$time <- as.Date(ODI$time, format = "%d/%m/%Y %H:%M:%S")
+
+```
+summary of data
+```{r}
+summary(ODI)
+```
+
+
+pure values histogram
+```{r}
+barplot(table(ODI$machine_learning))
+
+```
+probibility values histogram
+```{r}
+barplot(prop.table(table(ODI$machine_learning)))
+```
+
+good day
+```{r}
+gd1 <- data.frame(ODI$good_day_1)
+gd2 <- data.frame(ODI$good_day_2)
+
+good_day <- cbind(gd1,gd2)
+head(good_day)
+
+
+#barplot(table(cat(ODI$good_day_1 , ODI$good_day_2))]
+
+```
+
+text mining from http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know
+
+```{r,fig.fullwidth=TRUE,fig.height=3}
+gd1 <- ODI$good_day_1
+gd2 <- ODI$good_day_2
+# combining good day answers 
+gd <- data.frame(gd1,gd2)
+docs <- Corpus(VectorSource(gd[,2]))
+toSpace <- content_transformer(function (x , pattern ) gsub(pattern, " ", x))
+docs <- tm_map(docs, toSpace, "/")
+docs <- tm_map(docs, toSpace, "@")
+docs <- tm_map(docs, toSpace, "\\|")
+# Convert the text to lower case
+docs <- tm_map(docs, content_transformer(tolower))
+# Remove numbers
+#docs <- tm_map(docs, removeNumbers)
+# Remove english common stopwords
+#docs <- tm_map(docs, removeWords, stopwords("english"))
+# Remove your own stop word
+# specify your stopwords as a character vector
+#docs <- tm_map(docs, removeWords, c("blabla1", "blabla2")) 
+# Remove punctuations
+#docs <- tm_map(docs, removePunctuation)
+# Eliminate extra white spaces
+docs <- tm_map(docs, stripWhitespace)
+# Text stemming
+# docs <- tm_map(docs, stemDocument)
+dtm <- TermDocumentMatrix(docs)
+m <- as.matrix(dtm)
+v <- sort(rowSums(m),decreasing=TRUE)
+d <- data.frame(word = names(v),freq=v)
+head(d, 10)
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+others
+```{r}
+#hist(ODI$time)
+#plot(data = data, x = $Timestamp)
+
+#install.packages("plotly")
+#library(plotly)
+#packageVersion('plotly')
+
+
+
+#p <- plot_ly(ODI, labels = ~machine_learning ,values = count(~machine_learning), type = 'pie')
+#p
+
+
+```
+classification / regression
+```{r}
+levels(ODI$gender)
+#levels(ODI$chocolate)
+reg=lm(random~gender,data=ODI)
+summary(reg)
+
+```
+
+
