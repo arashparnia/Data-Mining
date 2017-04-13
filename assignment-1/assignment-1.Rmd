@@ -1,7 +1,8 @@
 ---
-title: "Data mining Assignment 1 R Notebook"
-output: data-miningassignment-1-html_notebook
+title: "R Notebook"
+output: html_notebook
 ---
+
 
 <!-- This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  
 
@@ -76,7 +77,18 @@ summary of data
 ```{r}
 summary(ODI)
 ```
-
+### data exploration
+#### random numbers
+```{r}
+f <- ODI$random
+f <- as.numeric(levels(f)[f])
+head(f)
+length(f)
+f <- na.omit(f);
+head(f)
+length(f)
+f
+```
 
 pure values histogram
 ```{r}
@@ -153,14 +165,24 @@ others
 #p <- plot_ly(ODI, labels = ~machine_learning ,values = count(~machine_learning), type = 'pie')
 #p
 
+# findFreqTerms(dtm, lowfreq = 4)
+# findAssocs(dtm, terms = "freedom", corlimit = 0.3)
+# barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+#         col ="lightblue", main ="Most frequent words",
+#         ylab = "Word frequencies")
 
 ```
-classification / regression
+#classification / regression
+#### before feeding the data we remove noise, redundancy and insignificant variables.
+redundancy can be like age and birthday
+insignificant is when they dont conterbute to the outcome
+
+
 ```{r}
 levels(ODI$gender)
 #levels(ODI$chocolate)
 reg=lm(random~gender,data=ODI)
-summary(reg)
+#summary(reg)
 
 ```
 

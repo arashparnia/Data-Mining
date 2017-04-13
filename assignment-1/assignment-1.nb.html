@@ -172,46 +172,236 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
-<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a> Notebook. When you execute code within the notebook, the results appear beneath the code.</p>
-<p>Try executing this chunk by clicking the <em>Run</em> button within the chunk or by placing your cursor inside it and pressing <em>Cmd+Shift+Enter</em>.</p>
+<!-- This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.  
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
+-->
+<p>package installation</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3Bsb3QoY2FycylcbmBgYCJ9 -->
-<pre class="r"><code>#plot(cars)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucm0obGlzdCA9IHNldGRpZmYobHMoKSwgbHNmLnN0cigpKSlcbiMgSW5zdGFsbFxuI2luc3RhbGwucGFja2FnZXMoXCJ0bVwiKSAgIyBmb3IgdGV4dCBtaW5pbmdcbiNpbnN0YWxsLnBhY2thZ2VzKFwiU25vd2JhbGxDXCIpICMgZm9yIHRleHQgc3RlbW1pbmdcbiNpbnN0YWxsLnBhY2thZ2VzKFwid29yZGNsb3VkXCIpICMgd29yZC1jbG91ZCBnZW5lcmF0b3IgXG4jaW5zdGFsbC5wYWNrYWdlcyhcIlJDb2xvckJyZXdlclwiKSAjIGNvbG9yIHBhbGV0dGVzXG4jIExvYWRcbmxpYnJhcnkoXCJ0bVwiKVxubGlicmFyeShcIlNub3diYWxsQ1wiKVxubGlicmFyeShcIndvcmRjbG91ZFwiKVxubGlicmFyeShcIlJDb2xvckJyZXdlclwiKVxuYGBgIn0= -->
+<pre class="r"><code>rm(list = setdiff(ls(), lsf.str()))
+# Install
+#install.packages(&quot;tm&quot;)  # for text mining
+#install.packages(&quot;SnowballC&quot;) # for text stemming
+#install.packages(&quot;wordcloud&quot;) # word-cloud generator 
+#install.packages(&quot;RColorBrewer&quot;) # color palettes
+# Load
+library(&quot;tm&quot;)
+library(&quot;SnowballC&quot;)
+library(&quot;wordcloud&quot;)
+library(&quot;RColorBrewer&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the toolbar or by pressing <em>Cmd+Option+I</em>.</p>
-<p>When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the <em>Preview</em> button or press <em>Cmd+Shift+K</em> to preview the HTML file).</p>
+<p>loading the data change the path based on your own path</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcblNtc0NvbGxlY3Rpb24gPC0gcmVhZF9kZWxpbShcIn4vR29vZ2xlIERyaXZlL1ZVL0RhdGEgbWluaW5nL1Ntc0NvbGxlY3Rpb24uY3N2XCIsIFxuICAgIFwiO1wiLCBlc2NhcGVfZG91YmxlID0gRkFMU0UsIHRyaW1fd3MgPSBUUlVFKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkcilcblxuI2ZpbGVfcGF0aCA9IGZpbGUucGF0aCggXCJ+XCIsIFwiR29vZ2xlIERyaXZlXCIsXCJWVVwiLCBcIkRhdGEgbWluaW5nXCIgLFwiU21zQ29sbGVjdGlvbi5jc3ZcIilcbmZpbGVfcGF0aCA9IGZpbGUucGF0aCggXCJPREktMjAxNy5jc3ZcIilcbk9ESSA8LSByZWFkLmNzdihmaWxlX3BhdGgsaGVhZGVyID1UUlVFLHNlcCA9IFwiLFwiLHN0cmluZ3NBc0ZhY3RvcnMgPSBUUlVFLGZpbGwgPSBUUlVFKVxuXG5jbGFzcyhPREkpXG5gYGAifQ== -->
 <pre class="r"><code>library(readr)
-SmsCollection &lt;- read_delim(&quot;~/Google Drive/VU/Data mining/SmsCollection.csv&quot;, 
-    &quot;;&quot;, escape_double = FALSE, trim_ws = TRUE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUGFyc2VkIHdpdGggY29sdW1uIHNwZWNpZmljYXRpb246XG5jb2xzKFxuICBsYWJlbCA9IGNvbF9jaGFyYWN0ZXIoKSxcbiAgdGV4dCA9IGNvbF9jaGFyYWN0ZXIoKVxuKVxuMzM5IHBhcnNpbmcgZmFpbHVyZXMuXG5yb3cgY29sICBleHBlY3RlZCAgICBhY3R1YWwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsZVxuIDI5ICAtLSAyIGNvbHVtbnMgMyBjb2x1bW5zICd+L0dvb2dsZSBEcml2ZS9WVS9EYXRhIG1pbmluZy9TbXNDb2xsZWN0aW9uLmNzdidcbiA0NSAgLS0gMiBjb2x1bW5zIDQgY29sdW1ucyAnfi9Hb29nbGUgRHJpdmUvVlUvRGF0YSBtaW5pbmcvU21zQ29sbGVjdGlvbi5jc3YnXG4gNTIgIC0tIDIgY29sdW1ucyA2IGNvbHVtbnMgJ34vR29vZ2xlIERyaXZlL1ZVL0RhdGEgbWluaW5nL1Ntc0NvbGxlY3Rpb24uY3N2J1xuIDU2ICAtLSAyIGNvbHVtbnMgNCBjb2x1bW5zICd+L0dvb2dsZSBEcml2ZS9WVS9EYXRhIG1pbmluZy9TbXNDb2xsZWN0aW9uLmNzdidcbiA3OSAgLS0gMiBjb2x1bW5zIDQgY29sdW1ucyAnfi9Hb29nbGUgRHJpdmUvVlUvRGF0YSBtaW5pbmcvU21zQ29sbGVjdGlvbi5jc3YnXG4uLi4gLi4uIC4uLi4uLi4uLiAuLi4uLi4uLi4gLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLlxuU2VlIHByb2JsZW1zKC4uLikgZm9yIG1vcmUgZGV0YWlscy5cbiJ9 -->
-<pre><code>Parsed with column specification:
-cols(
-  label = col_character(),
-  text = col_character()
-)
-339 parsing failures.
-row col  expected    actual                                              file
- 29  -- 2 columns 3 columns '~/Google Drive/VU/Data mining/SmsCollection.csv'
- 45  -- 2 columns 4 columns '~/Google Drive/VU/Data mining/SmsCollection.csv'
- 52  -- 2 columns 6 columns '~/Google Drive/VU/Data mining/SmsCollection.csv'
- 56  -- 2 columns 4 columns '~/Google Drive/VU/Data mining/SmsCollection.csv'
- 79  -- 2 columns 4 columns '~/Google Drive/VU/Data mining/SmsCollection.csv'
-... ... ......... ......... .................................................
-See problems(...) for more details.</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1ZpZXcoU21zQ29sbGVjdGlvbilcbmBgYCJ9 -->
-<pre class="r"><code>#View(SmsCollection)</code></pre>
+
+#file_path = file.path( &quot;~&quot;, &quot;Google Drive&quot;,&quot;VU&quot;, &quot;Data mining&quot; ,&quot;SmsCollection.csv&quot;)
+file_path = file.path( &quot;ODI-2017.csv&quot;)
+ODI &lt;- read.csv(file_path,header =TRUE,sep = &quot;,&quot;,stringsAsFactors = TRUE,fill = TRUE)
+
+class(ODI)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>showing number of rowes and columns</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGltKE9ESSkgXG5gYGAifQ== -->
+<pre class="r"><code>dim(ODI) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>showing column names</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoT0RJKSBcbmBgYCJ9 -->
+<pre class="r"><code>names(ODI) </code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>changing column names</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sbmFtZXMoT0RJKVsxXSA8LSBcInRpbWVcIlxuY29sbmFtZXMoT0RJKVsyXSA8LSBcInByb2dyYW1cIlxuY29sbmFtZXMoT0RJKVszXSA8LSBcIm1hY2hpbmVfbGVhcm5pbmdcIlxuY29sbmFtZXMoT0RJKVs0XSA8LSBcImluZm9ybWF0aW9uX3JldHJpdmFsXCJcbmNvbG5hbWVzKE9ESSlbNV0gPC0gXCJzdGF0c1wiXG5jb2xuYW1lcyhPREkpWzZdIDwtIFwiZGF0YWJhc2VcIlxuY29sbmFtZXMoT0RJKVs3XSA8LSBcImdlbmRlclwiXG5jb2xuYW1lcyhPREkpWzhdIDwtIFwiY2hvY29sYXRlXCJcbmNvbG5hbWVzKE9ESSlbOV0gPC0gXCJiaXJ0aGRheVwiXG5jb2xuYW1lcyhPREkpWzEwXSA8LSBcIm5laWdoYm9yc1wiXG5jb2xuYW1lcyhPREkpWzExXSA8LSBcInN0YW5kXCJcbmNvbG5hbWVzKE9ESSlbMTJdIDwtIFwibW9uZXlcIlxuY29sbmFtZXMoT0RJKVsxM10gPC0gXCJyYW5kb21cIlxuY29sbmFtZXMoT0RJKVsxNF0gPC0gXCJiZWRfdGltZVwiXG5jb2xuYW1lcyhPREkpWzE1XSA8LSBcImdvb2RfZGF5XzFcIlxuY29sbmFtZXMoT0RJKVsxNl0gPC0gXCJnb29kX2RheV8yXCJcbiAgICAgICAgICAgICAgXG5oZWFkKE9ESSlcbk9ESSR0aW1lIDwtIGFzLkRhdGUoT0RJJHRpbWUsIGZvcm1hdCA9IFwiJWQvJW0vJVkgJUg6JU06JVNcIilcblxuYGBgIn0= -->
+<pre class="r"><code>colnames(ODI)[1] &lt;- &quot;time&quot;
+colnames(ODI)[2] &lt;- &quot;program&quot;
+colnames(ODI)[3] &lt;- &quot;machine_learning&quot;
+colnames(ODI)[4] &lt;- &quot;information_retrival&quot;
+colnames(ODI)[5] &lt;- &quot;stats&quot;
+colnames(ODI)[6] &lt;- &quot;database&quot;
+colnames(ODI)[7] &lt;- &quot;gender&quot;
+colnames(ODI)[8] &lt;- &quot;chocolate&quot;
+colnames(ODI)[9] &lt;- &quot;birthday&quot;
+colnames(ODI)[10] &lt;- &quot;neighbors&quot;
+colnames(ODI)[11] &lt;- &quot;stand&quot;
+colnames(ODI)[12] &lt;- &quot;money&quot;
+colnames(ODI)[13] &lt;- &quot;random&quot;
+colnames(ODI)[14] &lt;- &quot;bed_time&quot;
+colnames(ODI)[15] &lt;- &quot;good_day_1&quot;
+colnames(ODI)[16] &lt;- &quot;good_day_2&quot;
+              
+head(ODI)
+ODI$time &lt;- as.Date(ODI$time, format = &quot;%d/%m/%Y %H:%M:%S&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>summary of data</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShPREkpXG5gYGAifQ== -->
+<pre class="r"><code>summary(ODI)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<div id="data-exploration" class="section level3">
+<h3>data exploration</h3>
+<div id="random-numbers" class="section level4">
+<h4>random numbers</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZiA8LSBPREkkcmFuZG9tXG5mIDwtIGFzLm51bWVyaWMobGV2ZWxzKGYpW2ZdKVxuaGVhZChmKVxubGVuZ3RoKGYpXG5mIDwtIG5hLm9taXQoZik7XG5oZWFkKGYpXG5sZW5ndGgoZilcbmZcbmBgYCJ9 -->
+<pre class="r"><code>f &lt;- ODI$random
+f &lt;- as.numeric(levels(f)[f])
+head(f)
+length(f)
+f &lt;- na.omit(f);
+head(f)
+length(f)
+f</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>pure values histogram</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFycGxvdCh0YWJsZShPREkkbWFjaGluZV9sZWFybmluZykpXG5cbmBgYCJ9 -->
+<pre class="r"><code>barplot(table(ODI$machine_learning))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>probibility values histogram</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYmFycGxvdChwcm9wLnRhYmxlKHRhYmxlKE9ESSRtYWNoaW5lX2xlYXJuaW5nKSkpXG5gYGAifQ== -->
+<pre class="r"><code>barplot(prop.table(table(ODI$machine_learning)))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>good day</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2QxIDwtIGRhdGEuZnJhbWUoT0RJJGdvb2RfZGF5XzEpXG5nZDIgPC0gZGF0YS5mcmFtZShPREkkZ29vZF9kYXlfMilcblxuZ29vZF9kYXkgPC0gY2JpbmQoZ2QxLGdkMilcbmhlYWQoZ29vZF9kYXkpXG5cblxuI2JhcnBsb3QodGFibGUoY2F0KE9ESSRnb29kX2RheV8xICwgT0RJJGdvb2RfZGF5XzIpKV1cblxuYGBgIn0= -->
+<pre class="r"><code>gd1 &lt;- data.frame(ODI$good_day_1)
+gd2 &lt;- data.frame(ODI$good_day_2)
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gCgpUcnkgZXhlY3V0aW5nIHRoaXMgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpSdW4qIGJ1dHRvbiB3aXRoaW4gdGhlIGNodW5rIG9yIGJ5IHBsYWNpbmcgeW91ciBjdXJzb3IgaW5zaWRlIGl0IGFuZCBwcmVzc2luZyAqQ21kK1NoaWZ0K0VudGVyKi4gCgpgYGB7cn0KI3Bsb3QoY2FycykKYGBgCgpBZGQgYSBuZXcgY2h1bmsgYnkgY2xpY2tpbmcgdGhlICpJbnNlcnQgQ2h1bmsqIGJ1dHRvbiBvbiB0aGUgdG9vbGJhciBvciBieSBwcmVzc2luZyAqQ21kK09wdGlvbitJKi4KCldoZW4geW91IHNhdmUgdGhlIG5vdGVib29rLCBhbiBIVE1MIGZpbGUgY29udGFpbmluZyB0aGUgY29kZSBhbmQgb3V0cHV0IHdpbGwgYmUgc2F2ZWQgYWxvbmdzaWRlIGl0IChjbGljayB0aGUgKlByZXZpZXcqIGJ1dHRvbiBvciBwcmVzcyAqQ21kK1NoaWZ0K0sqIHRvIHByZXZpZXcgdGhlIEhUTUwgZmlsZSkuCgoKYGBge3J9CmxpYnJhcnkocmVhZHIpClNtc0NvbGxlY3Rpb24gPC0gcmVhZF9kZWxpbSgifi9Hb29nbGUgRHJpdmUvVlUvRGF0YSBtaW5pbmcvU21zQ29sbGVjdGlvbi5jc3YiLCAiOyIsIGVzY2FwZV9kb3VibGUgPSBGQUxTRSwgdHJpbV93cyA9IFRSVUUpCiNWaWV3KFNtc0NvbGxlY3Rpb24pCgpgYGA=</div>
+good_day &lt;- cbind(gd1,gd2)
+head(good_day)
+
+
+#barplot(table(cat(ODI$good_day_1 , ODI$good_day_2))]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>text mining from <a href="http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know" class="uri">http://www.sthda.com/english/wiki/text-mining-and-word-cloud-fundamentals-in-r-5-simple-steps-you-should-know</a></p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2QxIDwtIE9ESSRnb29kX2RheV8xXG5nZDIgPC0gT0RJJGdvb2RfZGF5XzJcbiMgY29tYmluaW5nIGdvb2QgZGF5IGFuc3dlcnMgXG5nZCA8LSBkYXRhLmZyYW1lKGdkMSxnZDIpXG5kb2NzIDwtIENvcnB1cyhWZWN0b3JTb3VyY2UoZ2RbLDJdKSlcbnRvU3BhY2UgPC0gY29udGVudF90cmFuc2Zvcm1lcihmdW5jdGlvbiAoeCAsIHBhdHRlcm4gKSBnc3ViKHBhdHRlcm4sIFwiIFwiLCB4KSlcbmRvY3MgPC0gdG1fbWFwKGRvY3MsIHRvU3BhY2UsIFwiL1wiKVxuZG9jcyA8LSB0bV9tYXAoZG9jcywgdG9TcGFjZSwgXCJAXCIpXG5kb2NzIDwtIHRtX21hcChkb2NzLCB0b1NwYWNlLCBcIlxcXFx8XCIpXG4jIENvbnZlcnQgdGhlIHRleHQgdG8gbG93ZXIgY2FzZVxuZG9jcyA8LSB0bV9tYXAoZG9jcywgY29udGVudF90cmFuc2Zvcm1lcih0b2xvd2VyKSlcbiMgUmVtb3ZlIG51bWJlcnNcbiNkb2NzIDwtIHRtX21hcChkb2NzLCByZW1vdmVOdW1iZXJzKVxuIyBSZW1vdmUgZW5nbGlzaCBjb21tb24gc3RvcHdvcmRzXG4jZG9jcyA8LSB0bV9tYXAoZG9jcywgcmVtb3ZlV29yZHMsIHN0b3B3b3JkcyhcImVuZ2xpc2hcIikpXG4jIFJlbW92ZSB5b3VyIG93biBzdG9wIHdvcmRcbiMgc3BlY2lmeSB5b3VyIHN0b3B3b3JkcyBhcyBhIGNoYXJhY3RlciB2ZWN0b3JcbiNkb2NzIDwtIHRtX21hcChkb2NzLCByZW1vdmVXb3JkcywgYyhcImJsYWJsYTFcIiwgXCJibGFibGEyXCIpKSBcbiMgUmVtb3ZlIHB1bmN0dWF0aW9uc1xuI2RvY3MgPC0gdG1fbWFwKGRvY3MsIHJlbW92ZVB1bmN0dWF0aW9uKVxuIyBFbGltaW5hdGUgZXh0cmEgd2hpdGUgc3BhY2VzXG5kb2NzIDwtIHRtX21hcChkb2NzLCBzdHJpcFdoaXRlc3BhY2UpXG4jIFRleHQgc3RlbW1pbmdcbiMgZG9jcyA8LSB0bV9tYXAoZG9jcywgc3RlbURvY3VtZW50KVxuZHRtIDwtIFRlcm1Eb2N1bWVudE1hdHJpeChkb2NzKVxubSA8LSBhcy5tYXRyaXgoZHRtKVxudiA8LSBzb3J0KHJvd1N1bXMobSksZGVjcmVhc2luZz1UUlVFKVxuZCA8LSBkYXRhLmZyYW1lKHdvcmQgPSBuYW1lcyh2KSxmcmVxPXYpXG5oZWFkKGQsIDEwKVxuc2V0LnNlZWQoMTIzNClcbndvcmRjbG91ZCh3b3JkcyA9IGQkd29yZCwgZnJlcSA9IGQkZnJlcSwgbWluLmZyZXEgPSAxLFxuICAgICAgICAgIG1heC53b3Jkcz0yMDAsIHJhbmRvbS5vcmRlcj1GQUxTRSwgcm90LnBlcj0wLjM1LCBcbiAgICAgICAgICBjb2xvcnM9YnJld2VyLnBhbCg4LCBcIkRhcmsyXCIpKVxuYGBgIn0= -->
+<pre class="r"><code>gd1 &lt;- ODI$good_day_1
+gd2 &lt;- ODI$good_day_2
+# combining good day answers 
+gd &lt;- data.frame(gd1,gd2)
+docs &lt;- Corpus(VectorSource(gd[,2]))
+toSpace &lt;- content_transformer(function (x , pattern ) gsub(pattern, &quot; &quot;, x))
+docs &lt;- tm_map(docs, toSpace, &quot;/&quot;)
+docs &lt;- tm_map(docs, toSpace, &quot;@&quot;)
+docs &lt;- tm_map(docs, toSpace, &quot;\\|&quot;)
+# Convert the text to lower case
+docs &lt;- tm_map(docs, content_transformer(tolower))
+# Remove numbers
+#docs &lt;- tm_map(docs, removeNumbers)
+# Remove english common stopwords
+#docs &lt;- tm_map(docs, removeWords, stopwords(&quot;english&quot;))
+# Remove your own stop word
+# specify your stopwords as a character vector
+#docs &lt;- tm_map(docs, removeWords, c(&quot;blabla1&quot;, &quot;blabla2&quot;)) 
+# Remove punctuations
+#docs &lt;- tm_map(docs, removePunctuation)
+# Eliminate extra white spaces
+docs &lt;- tm_map(docs, stripWhitespace)
+# Text stemming
+# docs &lt;- tm_map(docs, stemDocument)
+dtm &lt;- TermDocumentMatrix(docs)
+m &lt;- as.matrix(dtm)
+v &lt;- sort(rowSums(m),decreasing=TRUE)
+d &lt;- data.frame(word = names(v),freq=v)
+head(d, 10)
+set.seed(1234)
+wordcloud(words = d$word, freq = d$freq, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, &quot;Dark2&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>others</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2hpc3QoT0RJJHRpbWUpXG4jcGxvdChkYXRhID0gZGF0YSwgeCA9ICRUaW1lc3RhbXApXG5cbiNpbnN0YWxsLnBhY2thZ2VzKFwicGxvdGx5XCIpXG4jbGlicmFyeShwbG90bHkpXG4jcGFja2FnZVZlcnNpb24oJ3Bsb3RseScpXG5cblxuXG4jcCA8LSBwbG90X2x5KE9ESSwgbGFiZWxzID0gfm1hY2hpbmVfbGVhcm5pbmcgLHZhbHVlcyA9IGNvdW50KH5tYWNoaW5lX2xlYXJuaW5nKSwgdHlwZSA9ICdwaWUnKVxuI3BcblxuIyBmaW5kRnJlcVRlcm1zKGR0bSwgbG93ZnJlcSA9IDQpXG4jIGZpbmRBc3NvY3MoZHRtLCB0ZXJtcyA9IFwiZnJlZWRvbVwiLCBjb3JsaW1pdCA9IDAuMylcbiMgYmFycGxvdChkWzE6MTAsXSRmcmVxLCBsYXMgPSAyLCBuYW1lcy5hcmcgPSBkWzE6MTAsXSR3b3JkLFxuIyAgICAgICAgIGNvbCA9XCJsaWdodGJsdWVcIiwgbWFpbiA9XCJNb3N0IGZyZXF1ZW50IHdvcmRzXCIsXG4jICAgICAgICAgeWxhYiA9IFwiV29yZCBmcmVxdWVuY2llc1wiKVxuXG5gYGAifQ== -->
+<pre class="r"><code>#hist(ODI$time)
+#plot(data = data, x = $Timestamp)
+
+#install.packages(&quot;plotly&quot;)
+#library(plotly)
+#packageVersion('plotly')
+
+
+
+#p &lt;- plot_ly(ODI, labels = ~machine_learning ,values = count(~machine_learning), type = 'pie')
+#p
+
+# findFreqTerms(dtm, lowfreq = 4)
+# findAssocs(dtm, terms = &quot;freedom&quot;, corlimit = 0.3)
+# barplot(d[1:10,]$freq, las = 2, names.arg = d[1:10,]$word,
+#         col =&quot;lightblue&quot;, main =&quot;Most frequent words&quot;,
+#         ylab = &quot;Word frequencies&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+<div id="classification-regression" class="section level1">
+<h1>classification / regression</h1>
+<div id="before-feeding-the-data-we-remove-noise-redundancy-and-insignificant-variables." class="section level4">
+<h4>before feeding the data we remove noise, redundancy and insignificant variables.</h4>
+<p>redundancy can be like age and birthday insignificant is when they dont conterbute to the outcome</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGV2ZWxzKE9ESSRnZW5kZXIpXG4jbGV2ZWxzKE9ESSRjaG9jb2xhdGUpXG5yZWc9bG0ocmFuZG9tfmdlbmRlcixkYXRhPU9ESSlcbiNzdW1tYXJ5KHJlZylcblxuYGBgIn0= -->
+<pre class="r"><code>levels(ODI$gender)
+#levels(ODI$chocolate)
+reg=lm(random~gender,data=ODI)
+#summary(reg)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKCjwhLS0gVGhpcyBpcyBhbiBbUiBNYXJrZG93bl0oaHR0cDovL3JtYXJrZG93bi5yc3R1ZGlvLmNvbSkgTm90ZWJvb2suIFdoZW4geW91IGV4ZWN1dGUgY29kZSB3aXRoaW4gdGhlIG5vdGVib29rLCB0aGUgcmVzdWx0cyBhcHBlYXIgYmVuZWF0aCB0aGUgY29kZS4gIAoKVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkNtZCtTaGlmdCtFbnRlciouIAoKQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkNtZCtPcHRpb24rSSouCgpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkNtZCtTaGlmdCtLKiB0byBwcmV2aWV3IHRoZSBIVE1MIGZpbGUpLgotLT4KcGFja2FnZSBpbnN0YWxsYXRpb24KCmBgYHtyfQpybShsaXN0ID0gc2V0ZGlmZihscygpLCBsc2Yuc3RyKCkpKQojIEluc3RhbGwKI2luc3RhbGwucGFja2FnZXMoInRtIikgICMgZm9yIHRleHQgbWluaW5nCiNpbnN0YWxsLnBhY2thZ2VzKCJTbm93YmFsbEMiKSAjIGZvciB0ZXh0IHN0ZW1taW5nCiNpbnN0YWxsLnBhY2thZ2VzKCJ3b3JkY2xvdWQiKSAjIHdvcmQtY2xvdWQgZ2VuZXJhdG9yIAojaW5zdGFsbC5wYWNrYWdlcygiUkNvbG9yQnJld2VyIikgIyBjb2xvciBwYWxldHRlcwojIExvYWQKbGlicmFyeSgidG0iKQpsaWJyYXJ5KCJTbm93YmFsbEMiKQpsaWJyYXJ5KCJ3b3JkY2xvdWQiKQpsaWJyYXJ5KCJSQ29sb3JCcmV3ZXIiKQpgYGAKCgoKbG9hZGluZyB0aGUgZGF0YSAKY2hhbmdlIHRoZSBwYXRoIGJhc2VkIG9uIHlvdXIgb3duIHBhdGgKYGBge3J9CmxpYnJhcnkocmVhZHIpCgojZmlsZV9wYXRoID0gZmlsZS5wYXRoKCAifiIsICJHb29nbGUgRHJpdmUiLCJWVSIsICJEYXRhIG1pbmluZyIgLCJTbXNDb2xsZWN0aW9uLmNzdiIpCmZpbGVfcGF0aCA9IGZpbGUucGF0aCggIk9ESS0yMDE3LmNzdiIpCk9ESSA8LSByZWFkLmNzdihmaWxlX3BhdGgsaGVhZGVyID1UUlVFLHNlcCA9ICIsIixzdHJpbmdzQXNGYWN0b3JzID0gVFJVRSxmaWxsID0gVFJVRSkKCmNsYXNzKE9ESSkKYGBgCnNob3dpbmcgbnVtYmVyIG9mIHJvd2VzIGFuZCBjb2x1bW5zCmBgYHtyfQpkaW0oT0RJKSAKYGBgCnNob3dpbmcgY29sdW1uIG5hbWVzCmBgYHtyfQpuYW1lcyhPREkpIApgYGAKCmNoYW5naW5nIGNvbHVtbiBuYW1lcyAKYGBge3J9CmNvbG5hbWVzKE9ESSlbMV0gPC0gInRpbWUiCmNvbG5hbWVzKE9ESSlbMl0gPC0gInByb2dyYW0iCmNvbG5hbWVzKE9ESSlbM10gPC0gIm1hY2hpbmVfbGVhcm5pbmciCmNvbG5hbWVzKE9ESSlbNF0gPC0gImluZm9ybWF0aW9uX3JldHJpdmFsIgpjb2xuYW1lcyhPREkpWzVdIDwtICJzdGF0cyIKY29sbmFtZXMoT0RJKVs2XSA8LSAiZGF0YWJhc2UiCmNvbG5hbWVzKE9ESSlbN10gPC0gImdlbmRlciIKY29sbmFtZXMoT0RJKVs4XSA8LSAiY2hvY29sYXRlIgpjb2xuYW1lcyhPREkpWzldIDwtICJiaXJ0aGRheSIKY29sbmFtZXMoT0RJKVsxMF0gPC0gIm5laWdoYm9ycyIKY29sbmFtZXMoT0RJKVsxMV0gPC0gInN0YW5kIgpjb2xuYW1lcyhPREkpWzEyXSA8LSAibW9uZXkiCmNvbG5hbWVzKE9ESSlbMTNdIDwtICJyYW5kb20iCmNvbG5hbWVzKE9ESSlbMTRdIDwtICJiZWRfdGltZSIKY29sbmFtZXMoT0RJKVsxNV0gPC0gImdvb2RfZGF5XzEiCmNvbG5hbWVzKE9ESSlbMTZdIDwtICJnb29kX2RheV8yIgogICAgICAgICAgICAgIApoZWFkKE9ESSkKT0RJJHRpbWUgPC0gYXMuRGF0ZShPREkkdGltZSwgZm9ybWF0ID0gIiVkLyVtLyVZICVIOiVNOiVTIikKCmBgYApzdW1tYXJ5IG9mIGRhdGEKYGBge3J9CnN1bW1hcnkoT0RJKQpgYGAKIyMjIGRhdGEgZXhwbG9yYXRpb24KIyMjIyByYW5kb20gbnVtYmVycwpgYGB7cn0KZiA8LSBPREkkcmFuZG9tCmYgPC0gYXMubnVtZXJpYyhsZXZlbHMoZilbZl0pCmhlYWQoZikKbGVuZ3RoKGYpCmYgPC0gbmEub21pdChmKTsKaGVhZChmKQpsZW5ndGgoZikKZgpgYGAKCnB1cmUgdmFsdWVzIGhpc3RvZ3JhbQpgYGB7cn0KYmFycGxvdCh0YWJsZShPREkkbWFjaGluZV9sZWFybmluZykpCgpgYGAKcHJvYmliaWxpdHkgdmFsdWVzIGhpc3RvZ3JhbQpgYGB7cn0KYmFycGxvdChwcm9wLnRhYmxlKHRhYmxlKE9ESSRtYWNoaW5lX2xlYXJuaW5nKSkpCmBgYAoKZ29vZCBkYXkKYGBge3J9CmdkMSA8LSBkYXRhLmZyYW1lKE9ESSRnb29kX2RheV8xKQpnZDIgPC0gZGF0YS5mcmFtZShPREkkZ29vZF9kYXlfMikKCmdvb2RfZGF5IDwtIGNiaW5kKGdkMSxnZDIpCmhlYWQoZ29vZF9kYXkpCgoKI2JhcnBsb3QodGFibGUoY2F0KE9ESSRnb29kX2RheV8xICwgT0RJJGdvb2RfZGF5XzIpKV0KCmBgYAoKdGV4dCBtaW5pbmcgZnJvbSBodHRwOi8vd3d3LnN0aGRhLmNvbS9lbmdsaXNoL3dpa2kvdGV4dC1taW5pbmctYW5kLXdvcmQtY2xvdWQtZnVuZGFtZW50YWxzLWluLXItNS1zaW1wbGUtc3RlcHMteW91LXNob3VsZC1rbm93CgpgYGB7cixmaWcuZnVsbHdpZHRoPVRSVUUsZmlnLmhlaWdodD0zfQpnZDEgPC0gT0RJJGdvb2RfZGF5XzEKZ2QyIDwtIE9ESSRnb29kX2RheV8yCiMgY29tYmluaW5nIGdvb2QgZGF5IGFuc3dlcnMgCmdkIDwtIGRhdGEuZnJhbWUoZ2QxLGdkMikKZG9jcyA8LSBDb3JwdXMoVmVjdG9yU291cmNlKGdkWywyXSkpCnRvU3BhY2UgPC0gY29udGVudF90cmFuc2Zvcm1lcihmdW5jdGlvbiAoeCAsIHBhdHRlcm4gKSBnc3ViKHBhdHRlcm4sICIgIiwgeCkpCmRvY3MgPC0gdG1fbWFwKGRvY3MsIHRvU3BhY2UsICIvIikKZG9jcyA8LSB0bV9tYXAoZG9jcywgdG9TcGFjZSwgIkAiKQpkb2NzIDwtIHRtX21hcChkb2NzLCB0b1NwYWNlLCAiXFx8IikKIyBDb252ZXJ0IHRoZSB0ZXh0IHRvIGxvd2VyIGNhc2UKZG9jcyA8LSB0bV9tYXAoZG9jcywgY29udGVudF90cmFuc2Zvcm1lcih0b2xvd2VyKSkKIyBSZW1vdmUgbnVtYmVycwojZG9jcyA8LSB0bV9tYXAoZG9jcywgcmVtb3ZlTnVtYmVycykKIyBSZW1vdmUgZW5nbGlzaCBjb21tb24gc3RvcHdvcmRzCiNkb2NzIDwtIHRtX21hcChkb2NzLCByZW1vdmVXb3Jkcywgc3RvcHdvcmRzKCJlbmdsaXNoIikpCiMgUmVtb3ZlIHlvdXIgb3duIHN0b3Agd29yZAojIHNwZWNpZnkgeW91ciBzdG9wd29yZHMgYXMgYSBjaGFyYWN0ZXIgdmVjdG9yCiNkb2NzIDwtIHRtX21hcChkb2NzLCByZW1vdmVXb3JkcywgYygiYmxhYmxhMSIsICJibGFibGEyIikpIAojIFJlbW92ZSBwdW5jdHVhdGlvbnMKI2RvY3MgPC0gdG1fbWFwKGRvY3MsIHJlbW92ZVB1bmN0dWF0aW9uKQojIEVsaW1pbmF0ZSBleHRyYSB3aGl0ZSBzcGFjZXMKZG9jcyA8LSB0bV9tYXAoZG9jcywgc3RyaXBXaGl0ZXNwYWNlKQojIFRleHQgc3RlbW1pbmcKIyBkb2NzIDwtIHRtX21hcChkb2NzLCBzdGVtRG9jdW1lbnQpCmR0bSA8LSBUZXJtRG9jdW1lbnRNYXRyaXgoZG9jcykKbSA8LSBhcy5tYXRyaXgoZHRtKQp2IDwtIHNvcnQocm93U3VtcyhtKSxkZWNyZWFzaW5nPVRSVUUpCmQgPC0gZGF0YS5mcmFtZSh3b3JkID0gbmFtZXModiksZnJlcT12KQpoZWFkKGQsIDEwKQpzZXQuc2VlZCgxMjM0KQp3b3JkY2xvdWQod29yZHMgPSBkJHdvcmQsIGZyZXEgPSBkJGZyZXEsIG1pbi5mcmVxID0gMSwKICAgICAgICAgIG1heC53b3Jkcz0yMDAsIHJhbmRvbS5vcmRlcj1GQUxTRSwgcm90LnBlcj0wLjM1LCAKICAgICAgICAgIGNvbG9ycz1icmV3ZXIucGFsKDgsICJEYXJrMiIpKQpgYGAKCm90aGVycwpgYGB7cn0KI2hpc3QoT0RJJHRpbWUpCiNwbG90KGRhdGEgPSBkYXRhLCB4ID0gJFRpbWVzdGFtcCkKCiNpbnN0YWxsLnBhY2thZ2VzKCJwbG90bHkiKQojbGlicmFyeShwbG90bHkpCiNwYWNrYWdlVmVyc2lvbigncGxvdGx5JykKCgoKI3AgPC0gcGxvdF9seShPREksIGxhYmVscyA9IH5tYWNoaW5lX2xlYXJuaW5nICx2YWx1ZXMgPSBjb3VudCh+bWFjaGluZV9sZWFybmluZyksIHR5cGUgPSAncGllJykKI3AKCiMgZmluZEZyZXFUZXJtcyhkdG0sIGxvd2ZyZXEgPSA0KQojIGZpbmRBc3NvY3MoZHRtLCB0ZXJtcyA9ICJmcmVlZG9tIiwgY29ybGltaXQgPSAwLjMpCiMgYmFycGxvdChkWzE6MTAsXSRmcmVxLCBsYXMgPSAyLCBuYW1lcy5hcmcgPSBkWzE6MTAsXSR3b3JkLAojICAgICAgICAgY29sID0ibGlnaHRibHVlIiwgbWFpbiA9Ik1vc3QgZnJlcXVlbnQgd29yZHMiLAojICAgICAgICAgeWxhYiA9ICJXb3JkIGZyZXF1ZW5jaWVzIikKCmBgYAojY2xhc3NpZmljYXRpb24gLyByZWdyZXNzaW9uCiMjIyMgYmVmb3JlIGZlZWRpbmcgdGhlIGRhdGEgd2UgcmVtb3ZlIG5vaXNlLCByZWR1bmRhbmN5IGFuZCBpbnNpZ25pZmljYW50IHZhcmlhYmxlcy4KcmVkdW5kYW5jeSBjYW4gYmUgbGlrZSBhZ2UgYW5kIGJpcnRoZGF5Cmluc2lnbmlmaWNhbnQgaXMgd2hlbiB0aGV5IGRvbnQgY29udGVyYnV0ZSB0byB0aGUgb3V0Y29tZQoKCmBgYHtyfQpsZXZlbHMoT0RJJGdlbmRlcikKI2xldmVscyhPREkkY2hvY29sYXRlKQpyZWc9bG0ocmFuZG9tfmdlbmRlcixkYXRhPU9ESSkKI3N1bW1hcnkocmVnKQoKYGBgCgoK</div>
 
 
 
