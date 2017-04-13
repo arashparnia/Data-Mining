@@ -191,3 +191,5 @@ reg=lm(random~gender,data=ODI)
 ```
 
 
+
+
