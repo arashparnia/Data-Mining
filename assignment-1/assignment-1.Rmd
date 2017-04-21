@@ -61,18 +61,8 @@ file_path = file.path( "ODI-2017.csv")
 ODI <- read.csv(file_path,header =TRUE,sep = ",",stringsAsFactors = TRUE,fill = TRUE)
 
 class(ODI)
-```
-showing number of rowes and columns
-```{r}
-dim(ODI) 
-```
-showing column names
-```{r}
-names(ODI) 
-```
 
-changing column names 
-```{r}
+
 colnames(ODI)[1] <- "time"
 colnames(ODI)[2] <- "program"
 colnames(ODI)[3] <- "mach_lrn"
@@ -92,12 +82,6 @@ colnames(ODI)[16] <- "good_day_2"
               
 head(ODI)
 ODI$time <- as.Date(ODI$time, format = "%d/%m/%Y %H:%M:%S")
-
-```
-#####• Notice all sorts of properties of the dataset: how many records are there, how many attributes, what kinds of attributes are there, ranges of values, distribution of values, relationships between attributes, and so on. Notice if something is interesting (to you, or in general), make sure you write it down if you find something worth mentioning.
-summary of data
-```{r}
-names(ODI)
 
 ```
 
@@ -236,14 +220,53 @@ insignificant is when they dont conterbute to the outcome
 
 
 
+decition tree
+
+
+```{r}
+# Load the party package. It will automatically load other dependent packages.
+library(party)
+
+# Create the input data frame.
+input.dat <- ODI
+
+# Give the chart file a name.
+#png(file = "decision_tree.png")
+attach(input.dat)
+# Create the tree.
+  output.tree <- ctree(
+  program ~  mach_lrn + stats +  db + info_ret + chocolate + bed_time + gender ,  
+  data = input.dat)
+
+  
+  print(output.tree)
+# Plot the tree.
+plot(output.tree)
+
+# Save the file.
+#dev.off()
+```
+
+
 do logistical regression  and assosiation 
 
 
 ```{r}
-levels(ODI$gender)
-#levels(ODI$chocolate)
-reg=lm(random~gender,data=ODI)
-#summary(reg)
+
+
+
+# levels(ODI$gender)
+# #levels(ODI$chocolate)
+# reg=lm(random~gender,data=ODI)
+# #summary(reg)
+
+#logistic regression model
+# set.seed(88)
+# split <- sample.split(train$Recommended, SplitRatio = 0.75)
+model <- lm(formula = random ~  chocolate + gender, data = ODI)
+# model <- glm (random ~ gender, data = ODI, family = binomial)
+summary(model)
+predict <- predict(model, type = 'response')
 
 ```
 
