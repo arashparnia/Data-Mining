@@ -228,16 +228,15 @@ decition tree
 # Load the party package. It will automatically load other dependent packages.
 library(party)
 
-# Create the input data frame.
-input.dat <- ODI
+
 
 # Give the chart file a name.
 #png(file = "decision_tree.png")
-attach(input.dat)
+
 # Create the tree.
   output.tree <- ctree(
-  gender ~  mach_lrn + stats +  db + info_ret + chocolate   ,  
-  data = input.dat)
+  gender ~  mach_lrn + stats +  db + info_ret + chocolate + bed_time + program  ,  
+  data = ODI)
 
   
   print(output.tree)
@@ -269,6 +268,16 @@ model <- lm(formula = age ~  chocolate + gender + program + money + bed_time, da
 summary(model)
 predict <- predict(model, type = 'response')
 
+```
+assosiation rules
+```{r}
+library(arules)
+# find association rules with default settings
+ # 1, 10, 11, 13, 14
+rules <- apriori(ODI[-c(1,10,11,13,14)])
+rules.sorted <- sort(rules, by="lift")
+inspect(rules.sorted)
+# inspect(rules)
 ```
 
 
