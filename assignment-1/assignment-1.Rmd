@@ -72,13 +72,14 @@ colnames(ODI)[6] <- "db"
 colnames(ODI)[7] <- "gender"
 colnames(ODI)[8] <- "chocolate"
 colnames(ODI)[9] <- "birthday"
-colnames(ODI)[10] <- "neighbors"
-colnames(ODI)[11] <- "stand"
-colnames(ODI)[12] <- "money"
-colnames(ODI)[13] <- "random"
-colnames(ODI)[14] <- "bed_time"
-colnames(ODI)[15] <- "good_day_1"
-colnames(ODI)[16] <- "good_day_2"
+colnames(ODI)[10] <- "age"
+colnames(ODI)[11] <- "neighbors"
+colnames(ODI)[12] <- "stand"
+colnames(ODI)[13] <- "money"
+colnames(ODI)[14] <- "random"
+colnames(ODI)[15] <- "bed_time"
+colnames(ODI)[16] <- "good_day_1"
+colnames(ODI)[17] <- "good_day_2"
               
 head(ODI)
 ODI$time <- as.Date(ODI$time, format = "%d/%m/%Y %H:%M:%S")
@@ -235,7 +236,7 @@ input.dat <- ODI
 attach(input.dat)
 # Create the tree.
   output.tree <- ctree(
-  program ~  mach_lrn + stats +  db + info_ret + chocolate + bed_time + gender ,  
+  gender ~  mach_lrn + stats +  db + info_ret + chocolate   ,  
   data = input.dat)
 
   
@@ -263,7 +264,7 @@ do logistical regression  and assosiation
 #logistic regression model
 # set.seed(88)
 # split <- sample.split(train$Recommended, SplitRatio = 0.75)
-model <- lm(formula = random ~  chocolate + gender, data = ODI)
+model <- lm(formula = age ~  chocolate + gender + program + money + bed_time, data = ODI)
 # model <- glm (random ~ gender, data = ODI, family = binomial)
 summary(model)
 predict <- predict(model, type = 'response')
