@@ -12,6 +12,23 @@ Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by press
 
 When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file).
 -->
+
+Task 1: Explore a small dataset (40 points)
+When you do data mining (DM), you will need to check for data quality, manipulate data, as well as to build and evaluate models. You can write your own applications for this purpose, and in many commercial projects this is exactly what you are expected to do, but to start with DM and to carry out typical tasks I find it better to use a software that is specifically written for this purpose. In this first assignment, the aim is that you get familiar with your chosen DM software. You should learn to use it on a basic level, and carry out elementary DM tasks, so you will be prepared to take on more challenging ones coming to you in the form of subsequent assignments.
+Tasks and Expectations
+You (as a group) should start by choosing a certain DM software. Here’s a list of corresponding rules:
+• If you are uncertain about this choice, I recommend you to pick RapidMiner or WEKA. If you have a favourite programming language, you can also look for packages available in that language.
+• This is not a choice for the whole course. If you find out later that another software is better suited
+for a task at hand, you can switch to that in subsequent assignments.
+###Task 1.A – Exploration (20 points)
+Once you have chosen (and perhaps installed) the software, here is your first task:
+• Download the ODI dataset from BB. ODI stands for Own Dataset Initiative.
+• Load the dataset, which will be in CSV format as well as Excel, into your software. CSV stands
+for comma separated values, though it is more common these days to separate values with semi- colon (;). Nevertheless, the format is still called CSV even if the separator is a tab character or whatever else defined by the dataset creator.
+• Notice all sorts of properties of the dataset: how many records are there, how many attributes, what kinds of attributes are there, ranges of values, distribution of values, relationships between attributes, and so on. Notice if something is interesting (to you, or in general), make sure you write it down if you find something worth mentioning.
+• Make various plots of the data. Is there something interesting worth reporting? Report the figures, discuss what is in them. What meaning do those bars, lines, dots, etc. convey? Please select essential and interesting plots for discussion, as you have limited space for reporting your findings (see details in a later section).
+To sum up, you will need to explore the dataset, and report findings that are essential to get an idea about the data, and also, findings that make it possible to learn something interesting about the dataset.
+
 package installation
 #####installing
 ```{r}
@@ -58,10 +75,10 @@ changing column names
 ```{r}
 colnames(ODI)[1] <- "time"
 colnames(ODI)[2] <- "program"
-colnames(ODI)[3] <- "machine_learning"
-colnames(ODI)[4] <- "information_retrival"
+colnames(ODI)[3] <- "mach_lrn"
+colnames(ODI)[4] <- "info_ret"
 colnames(ODI)[5] <- "stats"
-colnames(ODI)[6] <- "database"
+colnames(ODI)[6] <- "db"
 colnames(ODI)[7] <- "gender"
 colnames(ODI)[8] <- "chocolate"
 colnames(ODI)[9] <- "birthday"
@@ -77,9 +94,21 @@ head(ODI)
 ODI$time <- as.Date(ODI$time, format = "%d/%m/%Y %H:%M:%S")
 
 ```
+#####• Notice all sorts of properties of the dataset: how many records are there, how many attributes, what kinds of attributes are there, ranges of values, distribution of values, relationships between attributes, and so on. Notice if something is interesting (to you, or in general), make sure you write it down if you find something worth mentioning.
 summary of data
 ```{r}
-summary(ODI)
+names(ODI)
+
+```
+
+```{r}
+library(xtable)
+# print(xtable(summary(ODI)))
+# print(xtable(summary(ODI)),floating=FALSE,latex.environments=NULL)
+print(xtable(summary(ODI[,1:4])),floating=FALSE,latex.environments=NULL,booktabs=TRUE)
+print(xtable(summary(ODI[,5:7])),floating=FALSE,latex.environments=NULL,booktabs=TRUE)
+print(xtable(summary(ODI[,8:11])),floating=FALSE,latex.environments=NULL,booktabs=TRUE)
+print(xtable(summary(ODI[,12:16])),floating=FALSE,latex.environments=NULL,booktabs=TRUE)
 ```
 ### data exploration
 #### random numbers
@@ -154,6 +183,19 @@ wordcloud(words = d$word, freq = d$freq, min.freq = 1,
           max.words=200, random.order=FALSE, rot.per=0.35, 
           colors=brewer.pal(8, "Dark2"))
 ```
+#IDEAS
+sleep as good nday and when they went to bed
+chocolate and gender
+age and bed time
+
+sex and random
+```{r}
+# plot(ODI$random,ODI$gender)
+random_number <- as.numeric(ODI$random)
+summary(ODI$gender)
+# plot(ODI$gender,ODI$random)
+```
+
 
 others
 ```{r}
@@ -177,9 +219,24 @@ others
 
 ```
 #classification / regression
+Task 1.B – Basic classification/regression (20 points)
+Our main goal with this task is that you learn to run simple experiments. Here’s the task list:
+• Take the ODI dataset and load it. Alternatively, you can download a dataset of your own choice
+from the web, and load that. If you opt for a downloaded dataset, write down why that interests
+you, and why it is suited for classification/regression.
+• Design and run at least one classification/regression experiment on the data, with cross validation.
+You will probably need to go through a couple of tutorials to accomplish this task. Don’t worry if you don’t know what cross validation is, we will cover that later. I just require you to use that to avoid that people do this task with one line of code.
+• Note the setup you use, the results you get, and try to understand what happened, what models have been built, what numbers have been outputted by the algorithm you used.
+• Try at least two algorithms, and try to interpret the differences in outcome of the experiments. This doesn’t need to be a deep analysis, remember that this assignment is only to get you started. We will learn more about performance measures and comparison later.
+Once you are done with this task, write up your findings.
 #### before feeding the data we remove noise, redundancy and insignificant variables.
 redundancy can be like age and birthday
 insignificant is when they dont conterbute to the outcome
+
+
+
+
+do logistical regression  and assosiation 
 
 
 ```{r}
