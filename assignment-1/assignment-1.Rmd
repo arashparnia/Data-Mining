@@ -266,45 +266,29 @@ do logistical regression  and assosiation
 # fit1 <- lm(age ~  gender + chocolate, data = ODI)
 # # fit2 <- lm(age ~  chocolate + gender + program + money , data = ODI)
 # # anova(fit1, fit2)
-# 
-# # K-fold cross-validation
-# library(DAAG)
-# cv.lm(data = ODI, fit1, m=3,printit = TRUE) # 3 fold cross-validation
-cv.lm(data = ODI, form.lm=formula(age ~ chocolate + gender ),seed = 13, m=10,printit = TRUE)
-
-
-# CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
-#           plotit="Observed")
-# CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
-#      plotit="Residual")
-# out <- CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
-#                plotit="Observed")
-# out[c("ms","df")]
-
-
+#
 # model <- glm (formula = age ~  chocolate + gender + program + money + bed_time, data = ODI)
 # summary(model)
 # predict <- predict(model, newdata = validation)
 
-# yourData <- ODI
-# #Randomly shuffle the data
-# yourData<-yourData[sample(nrow(yourData)),]
-# 
-# #Create 10 equally size folds
-# folds <- cut(seq(1,nrow(yourData)),breaks=10,labels=FALSE)
-# 
-# #Perform 10 fold cross validation
-# for(i in 1:10){
-#     #Segement your data by fold using the which() function 
-#     testIndexes <- which(folds==i,arr.ind=TRUE)
-#     testData <- yourData[testIndexes, ]
-#     trainData <- yourData[-testIndexes, ]
-#     #Use test and train data partitions however you desire...
-#     m <- lm(formula = age ~  chocolate + gender  + money , data = trainData)
-#     print(m)
-#     p <- predict(m, newdata = testData)
-#     summary(p)
-# }
+yourData <- ODI
+#Randomly shuffle the data
+yourData<-yourData[sample(nrow(yourData)),]
+
+#Create 10 equally size folds
+folds <- cut(seq(1,nrow(yourData)),breaks=10,labels=FALSE)
+
+#Perform 10 fold cross validation
+for(i in 1:10){
+    #Segement your data by fold using the which() function
+    testIndexes <- which(folds==i,arr.ind=TRUE)
+    testData <- yourData[testIndexes, ]
+    trainData <- yourData[-testIndexes, ]
+    
+    m <- lm(formula = age ~  chocolate + gender   ,data= trainData)
+    p <- predict(m, newdata = testData)
+    print(cor(testData$age, p))
+}
 
 
 ```
@@ -338,5 +322,96 @@ plot(rules.sorted[1:20], method="paracoord", control=list(reorder=TRUE))
 ```
 
 
+```{r}
+# Cross validation (customized)
+dat <- ODI
+library(plyr)   # progress bar
+library(caret)  # confusion matrix
+# False positive rate
+fpr <- NULL
+# False negative rate
+fnr <- NULL
 
+# Number of iterations
+k <- 400
+
+# Initialize progress bar
+pbar <- create_progress_bar('text')
+pbar$init(k)
+
+# Accuracy
+acc <- NULL
+
+set.seed(123)
+
+for(i in 1:k)
+{
+    # Train-test splitting
+    # 95% of samples -> fitting
+    # 5% of samples -> testing
+    smp_size <- floor(0.95 * nrow(dat))
+    index <- sample(seq_len(nrow(dat)),size=smp_size)
+    train <- dat[index, ]
+    test <- dat[-index, ]
+    
+    model <- glm(formula = age ~  bed_time + gender + chocolate + program,data= train )
+    
+    results_prob <- predict(m, newdata = test,type='response')
+    
+    # # Fitting
+    # model <- lm(age~random,data=train)
+    # 
+    # # Predict results
+    # results_prob <- predict(model,newdata = test,type='response')
+    
+    # If prob > 0.5 then 1, else 0
+    results <- ifelse(results_prob > 0.5,1,0)
+    
+    # Actual answers
+    answers <- test$age
+    
+    # Accuracy calculation
+    misClasificError <- mean(answers != results)
+    
+    # Collecting results
+    acc[i] <- 1-misClasificError
+    
+    # Confusion matrix
+    # cm <- confusionMatrix(data=results, reference=answers)
+    # fpr[i] <- cm$table[2]/(nrow(dat)-smp_size)
+    # fnr[i] <- cm$table[3]/(nrow(dat)-smp_size)
+    
+    pbar$step()
+}
+
+# Average accuracy of the model
+mean(acc)
+
+par(mfcol=c(1,2))
+
+# Histogram of accuracy
+hist(acc,xlab='Accuracy',ylab='Freq',
+     col='cyan',border='blue',density=30)
+
+# Boxplot of accuracy
+boxplot(acc,col='cyan',border='blue',horizontal=T,xlab='Accuracy',
+        main='Accuracy CV')
+
+# Confusion matrix and plots of fpr and fnr
+# mean(fpr)
+# mean(fnr)
+# hist(fpr,xlab='% of fnr',ylab='Freq',main='FPR',
+#      col='cyan',border='blue',density=30)
+# hist(fnr,xlab='% of fnr',ylab='Freq',main='FNR',
+#      col='cyan',border='blue',density=30)
+
+# model <- glm(formula = age ~  bed_time + gender + chocolate + program,data= ODI )
+# p = predict(model,ODI)
+# cor(ODI$age,p)
+
+```
+
+```{r}
+
+```
 

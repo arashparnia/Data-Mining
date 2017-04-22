@@ -1,10 +1,10 @@
-Timestamp,What programme are you in?,Have you taken a course on machine learning?,Have you taken a course on information retrieval?,Have you taken a course on statistics?,Have you taken a course on databases?,What is your gender?,Chocolate makes you.....,When is your birthday (date)?,age,Number of neighbors sitting around you?,Did you stand up?,"You can get _еµ_„ 100 if you win a local DM competition, or we don‰ЫЎ_З____С___t hold any competitions and I give everyone some money (not the same amount!). How much do you think you would get then?",Give a random number,Time you went to be Yesterday,What makes a good day for you (1)?,What makes a good day for you (2)?
+Timestamp,What programme are you in?,Have you taken a course on machine learning?,Have you taken a course on information retrieval?,Have you taken a course on statistics?,Have you taken a course on databases?,What is your gender?,Chocolate makes you.....,When is your birthday (date)?,age,Number of neighbors sitting around you?,Did you stand up?,"You can get __µåµ_‰Û_åÊ100 if you win a local DM competition, or we don‰Û¡_Ç____Ñ_____Á___t hold any competitions and I give everyone some money (not the same amount!). How much do you think you would get then?",Give a random number,Time you went to be Yesterday,What makes a good day for you (1)?,What makes a good day for you (2)?
 4/3/17 15:50,AI,yes,yes,unknown,no,male,neither,3/7/91,26,1,no,10,8,1:00,sdf,sdf
 4/3/17 15:50,Finance,no,unknown,mu,no,male,fat,2/12/90,27,5,no,0.3,2,10:30,sun,beer
-4/3/17 15:50,AI,yes,yes,mu,yes,male,unknown,3/9/91,26,4,no,,1,0:30,Sleep late,Donuts
+4/3/17 15:50,AI,yes,yes,mu,yes,male,unknown,3/9/91,26,4,no,29,1,0:30,Sleep late,Donuts
 4/3/17 15:50,AI,yes,yes,mu,yes,male,neither,1/1/70,47,200,no,0,456,1:02,good food,no programming errors
 4/3/17 15:50,CS,yes,no,mu,no,male,neither,19/01/1991,26,4,no,100,19,2:00,Movie,Sleep
-4/3/17 15:51,BA,yes,yes,mu,yes,male,other,27-11-1990,27,1,no,0.25,,3:00,Food,Sleep
+4/3/17 15:51,BA,yes,yes,mu,yes,male,other,27-11-1990,27,1,no,0.25,7,3:00,Food,Sleep
 4/3/17 15:51,Bio,no,yes,mu,yes,male,fat,30.4.1990,27,1,no,60,5,23:00,SUN,football
 4/3/17 15:51,BA,yes,yes,mu,yes,male,fat,2-Apr-94,23,5,no,0.3,66,0:00,Food,Positivity
 4/3/17 15:51,Other,yes,no,mu,yes,female,other,19-04-1990,27,0,no,0.12,19,0:00,Good breakfast,Good dinner
@@ -16,18 +16,18 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:51,AI,no,no,unknown,unknown,male,unknown,11 1,25,1,no,1,7,22:22,u,e
 4/3/17 15:51,Econ,no,no,mu,no,male,other,July,25,2,no,0,34,0:00,Yes,No
 4/3/17 15:52,AI,yes,yes,mu,yes,male,neither,27/03/1994,23,3,no,0,9,23:30,Sunny day,Not rainy
-4/3/17 15:52,Bio,yes,no,mu,no,male,slim,17-03-1981,36,1,no,100,,0:00,unproper,again
+4/3/17 15:52,Bio,yes,no,mu,no,male,slim,17-03-1981,36,1,no,100,7,0:00,unproper,again
 4/3/17 15:52,LS,no,no,mu,yes,female,neither,9,25,5,no,50,4,23:00,complete all tasks planned,having lots of food to eat
 4/3/17 15:52,AI,yes,yes,mu,yes,male,other,27-12-1990,27,1,no,0.3,31910,23:40,filling out nonsensical forms for a course,if i collect enough data
 4/3/17 15:52,Econ,no,no,sigma,no,male,fat,17-05-1992,25,300,unknown,0,37578887443,23:45,Sunny weather,Being with friends
-4/3/17 15:52,CS,no,no,sigma,yes,male,other,20/09/1994,23,4,no,100,42,,Pils,In de zon
+4/3/17 15:52,CS,no,no,sigma,yes,male,other,20/09/1994,23,4,no,100,42,0:00,Pils,In de zon
 4/3/17 15:52,AI,no,no,mu,no,male,other,2061987,25,1,no,100,36,16:00,sunshine,my stock goes up
 4/3/17 15:52,Bio,yes,no,mu,yes,male,slim,11/6/94,23,2,no,100,7,2:00,A lot of sleep,Alcohol
-4/3/17 15:52,AI,yes,yes,mu,yes,male,neither,10/1/93,24,2,no,100,265000234,,No one stealing my bike,No one stealing by back wheel
+4/3/17 15:52,AI,yes,yes,mu,yes,male,neither,10/1/93,24,2,no,100,265000234,0:00,No one stealing my bike,No one stealing by back wheel
 4/3/17 15:52,BA,yes,yes,mu,yes,female,fat,6/7/94,23,10,no,1,6,0:33,Gym session leg day,Cold but sunny weather
 4/3/17 15:52,AI,no,no,unknown,unknown,male,unknown,11 1,25,1,no,1,7,22:22,ffg,hhfg
 4/3/17 15:52,AI,no,no,mu,no,female,fat,13-03-1994,23,1,no,20,85,23:00,Sports,Sun
-4/3/17 15:52,CS,unknown,no,unknown,yes,unknown,unknown,7/4/93,24,5,no,100,7,,Getting a 10 in this course.,Getting a 11 in this course.
+4/3/17 15:52,CS,no,no,unknown,yes,unknown,unknown,7/4/93,24,5,no,100,7,0:00,Getting a 10 in this course.,Getting a 11 in this course.
 4/3/17 15:53,BA,no,no,mu,no,female,unknown,10.12.1992,25,1,no,3,62,1:00,coffee,sun
 4/3/17 15:53,BA,yes,yes,mu,yes,male,slim,17-11-1993,24,6,no,100,9,2:00,lachen,nog meer lachen
 4/3/17 15:53,Other,no,yes,mu,yes,male,fat,17-07-1989,28,1,no,100,50,0:00,gymming and studies,hard work
@@ -37,15 +37,15 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:54,CS,yes,no,mu,no,male,fat,11-May,25,4,unknown,100,6674,23:59,No responsibilities,Nice Weather
 4/3/17 15:54,Econ,no,yes,mu,yes,male,fat,26/02/1994,23,8,no,0.33,0.126422343,23:30,Good weather,Friends
 4/3/17 15:54,Other,yes,yes,mu,yes,male,other,5/2/92,25,4,no,100,5,1:00,sleep till 10:00,No stress
-4/3/17 15:54,AI,yes,yes,mu,yes,unknown,neither,4/9/94,23,5,no,0,16,,sun,"a lot of work (haha, just kidding? Or?)"
+4/3/17 15:54,AI,yes,yes,mu,yes,unknown,neither,4/9/94,23,5,no,0,16,0:00,sun,"a lot of work (haha, just kidding? Or?)"
 4/3/17 15:54,AI,no,yes,mu,no,female,neither,21-01-1988,29,6,no,1,73512,23:00,Coffee,Chocolade
 4/3/17 15:54,Econ,no,yes,mu,no,male,other,28-12-1993,24,1,no,5,1,1:00,No,Yes
 4/3/17 15:55,BA,yes,yes,mu,yes,male,fat,28-04-995,25,1,no,100,69,0:00,Bacon,Money
 4/3/17 15:55,Econ,no,no,mu,no,male,other,2/7/93,24,2,no,0.47,5,0:00,Friends,Mathematics
-4/3/17 15:55,CS,yes,unknown,unknown,yes,male,neither,China,25,300,no,,1,0:00,You,Not DM
+4/3/17 15:55,CS,yes,unknown,unknown,yes,male,neither,China,25,300,no,29,1,0:00,You,Not DM
 4/3/17 15:55,Bio,yes,yes,unknown,yes,male,neither,7/8/91,26,6,no,8,28,1:30,Good food,Coffee
 4/3/17 15:55,CS,yes,yes,unknown,yes,female,neither,25/09/1993,24,1,no,5,7,0:00,Sunny,Beer
-4/3/17 15:55,BA,no,unknown,mu,no,unknown,other,29/01/1855,25,-1,unknown,100,,2:21,1,2
+4/3/17 15:55,BA,no,unknown,mu,no,unknown,other,29/01/1855,25,-1,unknown,100,7,2:21,1,2
 4/3/17 15:55,CS,no,yes,mu,yes,male,neither,20-02-1992,25,0,no,10,32,1:30,XTC,dancing
 4/3/17 15:55,BA,no,no,sigma,no,male,fat,29/04/1994,23,0,no,5,1,23:00,Fun,Exercise
 4/3/17 15:55,CS,yes,no,mu,yes,male,neither,30.12.1992,25,3,no,3,2,1:57,Food,Sleep
@@ -55,7 +55,7 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:55,CS,no,no,mu,no,male,other,20-12-1700,25,5,no,0.3,9,23:30,sex,sun
 4/3/17 15:55,BA,yes,unknown,mu,yes,male,fat,31-01-95,22,7,yes,0.29,2,2:00,Data mining hc,Data mining projects
 4/3/17 15:55,AI,yes,yes,mu,yes,female,neither,1993,24,5,no,0.2,6,1:30,Sunshine,Friends
-4/3/17 15:55,Other,no,no,sigma,no,male,neither,16/09/1991,26,11,no,,9,7:12,sun ,chill
+4/3/17 15:55,Other,no,no,sigma,no,male,neither,16/09/1991,26,11,no,29,9,7:12,sun ,chill
 4/3/17 15:55,Bio,no,yes,unknown,no,male,fat,21-02-1980,36,6,no,0.3333,2.3,22:15,Beer,Sex
 4/3/17 15:55,BA,no,no,mu,yes,female,other,3-Jul,25,4,unknown,100,3,0:00,No class,Coffee in the morning 
 4/3/17 15:55,LS,yes,no,mu,yes,male,other,29-07-1990,27,6,no,80,3.14,2:30,Apples and Oranges,Enough Sleep
@@ -70,7 +70,7 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:55,BA,yes,yes,mu,yes,female,other,2/11/92,25,300,no,10,4,4:00,sleep,food
 4/3/17 15:55,CS,no,no,mu,no,male,fat,7/3/91,26,5,no,4,6,23:00,SEX,MONEY
 4/3/17 15:55,Econ,yes,no,mu,no,male,neither,April,25,0,no,0.3,1,2:30,sun,sports
-4/3/17 15:55,Other,no,no,mu,no,male,slim,14-06-1994,23,158,yes,,,,Bitches,Booze
+4/3/17 15:55,Other,no,no,mu,no,male,slim,14-06-1994,23,158,yes,29,7,0:00,Bitches,Booze
 4/3/17 15:55,Bio,yes,no,mu,no,female,fat,07.11.1989,28,1,no,1,7,1:30,Lots of sleep,Good food
 4/3/17 15:55,Other,no,no,mu,no,male,neither,20-4-1994,23,6,no,0.3,42,1:00,weed,sex
 4/3/17 15:55,Other,no,no,mu,no,male,slim,27/10,25,7,no,1,4,23:00,Sun,Running
@@ -100,7 +100,7 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:55,AI,no,no,mu,unknown,male,neither,july 6th,25,1,no,50,8,23:00,Friends,Food
 4/3/17 15:55,AI,yes,yes,mu,yes,male,neither,22-08-1994,23,4,no,1,7,0:00,Good grade,Ajax winning
 4/3/17 15:55,Bio,yes,no,mu,no,female,other,3-Mar,25,8,no,10,7,1:00,good food,enough sleep
-4/3/17 15:55,AI,yes,yes,unknown,unknown,male,other,11/8/89,28,1,no,,5,3:00,Spare time,Good weather
+4/3/17 15:55,AI,yes,yes,unknown,unknown,male,other,11/8/89,28,1,no,29,5,3:00,Spare time,Good weather
 4/3/17 15:55,Bio,yes,no,unknown,no,female,fat,8-Dec,25,300,no,0.33,2,0:30,The sun shining,Having nice plans with friends
 4/3/17 15:55,BA,yes,yes,mu,yes,male,fat,16-05,25,298,no,0.5,2,23:00,Beer,Sun
 4/3/17 15:55,Other,no,no,mu,no,male,fat,25-11-1989,28,4,no,5,7,12:00,sun,no alarm 
@@ -116,13 +116,13 @@ Timestamp,What programme are you in?,Have you taken a course on machine learning
 4/3/17 15:55,AI,yes,yes,mu,yes,male,fat,28-Nov-94,23,3,no,0,6,2:00,Beer,Friends
 4/3/17 15:55,Econ,no,no,mu,no,female,neither,19-06-1989,28,5,no,1,7.3,5:30,Gering a good graden back,Getting a wel deserved compliment
 4/3/17 15:56,BA,no,no,mu,yes,female,fat,12-Feb,25,4,no,90,25,0:00,Text message,Nice weather 
-4/3/17 15:56,BA,yes,yes,mu,yes,male,slim,adlk;jl112413,25,-1,unknown,100,3.14,,‰ЫЎ_З___г__Џ‰ЫЎ_З„а_µ_‰Ы_еК‰ЫЎ_З„а_____ц‰ЫЎ_З___г__Џ‰ЫЎ_З___г__У‰ЫЎ_З_Щ„Ѓ„Х__‰ЫЎ_З____е±‰ЫЎ_З„а_µ_‰Ы_еК‰ЫЎ_З___г__Џ,‰ЫЎ_З___г__Џ‰ЫЎ_З„а__Џ__ц‰ЫЎ_З_Щ„Ѓ„Х__‰ЫЎ_З___г‰Ы__ґ‰ЫЎ_З___г__Џ‰ЫЎ_З„а_µ_‰Ы_еК‰ЫЎ_З_Щ‰Ы__Ў_‰ЫЎ_З„а‰Ы__ґ_µ_С‰ЫЎ_З___г__Ф
+4/3/17 15:56,BA,yes,yes,mu,yes,male,slim,adlk;jl112413,25,-1,unknown,100,3.14,0:00,‰Û¡_Ç____Ñ________�‰Û¡_Ç____Ñ‰Û__¡_åµ_‰Û¡_Ç__µ__‰Û¡_Ç____Ñ‰Û__¡_____„ ‰Û¡_Ç____Ñ________�‰Û¡_Ç____Ñ________£‰Û¡_Ç____Ñ__©‰Û__Ä‰Û__´__‰Û¡_Ç____Ñ_____µå±‰Û¡_Ç____Ñ‰Û__¡_åµ_‰Û¡_Ç__µ__‰Û¡_Ç____Ñ________�,‰Û¡_Ç____Ñ________�‰Û¡_Ç____Ñ‰Û__¡___�__„ ‰Û¡_Ç____Ñ__©‰Û__Ä‰Û__´__‰Û¡_Ç____Ñ_____‰Û¡_Ç__ñÔ‰Û¡_Ç____Ñ________�‰Û¡_Ç____Ñ‰Û__¡_åµ_‰Û¡_Ç__µ__‰Û¡_Ç____Ñ__©‰Û¡_Ç_____‰Û¡_Ç____Ñ‰Û__¡‰Û¡_Ç__ñÔ_åµ__Á‰Û¡_Ç____Ñ_________
 4/3/17 15:56,CS,no,no,unknown,yes,male,neither,1/5/89,28,0,no,100,7,23:00,Rick and Morty ,Graduation 
 4/3/17 15:56,BA,yes,no,mu,no,male,fat,22-08,25,4,no,3,1,2:00,Good night rest,No deadlines on that day
 4/3/17 15:56,Other,no,no,mu,no,female,neither,13-09-1995,22,7,no,0,9,23:45,Good food,Good weather
 4/3/17 15:56,AI,no,no,mu,no,female,fat,2/10/95,22,2,no,5,7,0:45,lot of sun,time to relax
 4/3/17 15:56,CS,yes,yes,sigma,yes,male,other,19/08/1992,25,1,no,3,8,15:55,Halo,Friends
-4/3/17 15:56,Other,no,no,mu,no,female,neither,16-10-1994,23,4,no,0,5,,Chocolate,Being social
+4/3/17 15:56,Other,no,no,mu,no,female,neither,16-10-1994,23,4,no,0,5,0:00,Chocolate,Being social
 4/3/17 15:56,BA,yes,no,mu,no,male,fat,10/8/90,27,300,no,100,9,23:59,Enough sleep,Sports
 4/3/17 15:56,Bio,yes,unknown,mu,yes,female,slim,4/2/90,27,1,no,2,4,22:40,(Good) Food,Sun
 4/3/17 15:56,Econ,no,no,mu,no,male,fat,3/3/87,30,4,no,55,3,2:00,I shorted GBP againt EUR successfully,Copped my pair favorite sneakers
