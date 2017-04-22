@@ -252,32 +252,89 @@ do logistical regression  and assosiation
 
 
 ```{r}
-
-
-
 # levels(ODI$gender)
 # #levels(ODI$chocolate)
 # reg=lm(random~gender,data=ODI)
 # #summary(reg)
-
 #logistic regression model
 # set.seed(88)
-# split <- sample.split(train$Recommended, SplitRatio = 0.75)
-model <- lm(formula = age ~  chocolate + gender + program + money + bed_time, data = ODI)
-# model <- glm (random ~ gender, data = ODI, family = binomial)
-summary(model)
-predict <- predict(model, type = 'response')
+# train <- sample.split(ODI, SplitRatio = 0.75)
+# validation <- sample.split(ODI, SplitRatio = 0.25)
+# test <- sample.split(ODI, SplitRatio = 0.75)
+# model <- lm(formula = age ~  chocolate + gender + program + money + bed_time, data = train)
+# compare models
+# fit1 <- lm(age ~  gender + chocolate, data = ODI)
+# # fit2 <- lm(age ~  chocolate + gender + program + money , data = ODI)
+# # anova(fit1, fit2)
+# 
+# # K-fold cross-validation
+# library(DAAG)
+# cv.lm(data = ODI, fit1, m=3,printit = TRUE) # 3 fold cross-validation
+cv.lm(data = ODI, form.lm=formula(age ~ chocolate + gender ),seed = 13, m=10,printit = TRUE)
+
+
+# CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
+#           plotit="Observed")
+# CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
+#      plotit="Residual")
+# out <- CVlm(data=ODI, form.lm=formula(log(age)~(chocolate)+(gender)),
+#                plotit="Observed")
+# out[c("ms","df")]
+
+
+# model <- glm (formula = age ~  chocolate + gender + program + money + bed_time, data = ODI)
+# summary(model)
+# predict <- predict(model, newdata = validation)
+
+# yourData <- ODI
+# #Randomly shuffle the data
+# yourData<-yourData[sample(nrow(yourData)),]
+# 
+# #Create 10 equally size folds
+# folds <- cut(seq(1,nrow(yourData)),breaks=10,labels=FALSE)
+# 
+# #Perform 10 fold cross validation
+# for(i in 1:10){
+#     #Segement your data by fold using the which() function 
+#     testIndexes <- which(folds==i,arr.ind=TRUE)
+#     testData <- yourData[testIndexes, ]
+#     trainData <- yourData[-testIndexes, ]
+#     #Use test and train data partitions however you desire...
+#     m <- lm(formula = age ~  chocolate + gender  + money , data = trainData)
+#     print(m)
+#     p <- predict(m, newdata = testData)
+#     summary(p)
+# }
+
 
 ```
-assosiation rules
+#assosiation rules
 ```{r}
 library(arules)
 # find association rules with default settings
  # 1, 10, 11, 13, 14
 rules <- apriori(ODI[-c(1,10,11,13,14)])
 rules.sorted <- sort(rules, by="lift")
-inspect(rules.sorted)
+inspect(head(rules.sorted))
 # inspect(rules)
+```
+# find redundant rules
+```{r}
+ 
+subset.matrix <- is.subset(rules.sorted, rules.sorted)
+subset.matrix[lower.tri(subset.matrix, diag=T)] <- NA
+redundant <- colSums(subset.matrix, na.rm=T) >= 1
+# which(redundant)
+# remove redundant rules
+rules.pruned <- rules.sorted[!redundant]
+inspect(rules.pruned)
+```
+#visualize
+```{r}
+library(arulesViz)
+# plot(rules)
+# plot(rules[1:10], method="graph", control=list(type="items"))
+plot(rules.sorted[1:20], method="paracoord", control=list(reorder=TRUE))
 ```
 
 
