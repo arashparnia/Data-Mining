@@ -470,3 +470,31 @@ summary(result$Difference)
 
 ```
 
+```{r}
+## Use some example data.
+m1 <- SmsCollection
+
+# m2 <- NGramTokenizer(m1, control = NULL)
+# m2 < - WordTokenizer(m1, control = NULL)
+# m1 <- data.frame(m1)
+
+## Identify a decision tree.
+m <- J48(~., data = m1)
+m
+## Use 10 fold cross-validation.
+e <- evaluate_Weka_classifier(m,
+cost = matrix(c(0,2,1,0), ncol = 2),
+numFolds = 10, complexity = TRUE,
+seed = 123, class = TRUE)
+e
+summary(e)
+e$details
+```
+```{r}
+par(mfrow=c(2,2))
+plot(gender , main="Gender plot")
+hist(age, main="Age plot")
+plot(bed_time, main="Bed time plot")
+plot(chocolate, main="Chocolate plot")
+```
+
