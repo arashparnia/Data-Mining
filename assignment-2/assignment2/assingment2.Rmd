@@ -1,0 +1,269 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+# Introduction
+# In this script, code is written... :O
+
+rm(list=ls())        # Delete workspace
+
+######################################################################################################################
+######################################################################################################################
+# Installing Packages
+# source("https://s3-us-west-2.amazonaws.com/10x.files/supp/cell-exp/rkit-install-1.1.0.R")
+# install.packages("cellrangerRkit")
+
+# Library
+library("ggplot2")
+# library(cellrangerRkit)
+# packageVersion("cellrangerRkit")
+######################################################################################################################
+######################################################################################################################
+## DATA LOADING
+
+# Read Data (sorted on time)
+Data_Raw <- read.csv("training_set_VU_DM_2014.csv", header= TRUE,nrows=20000)
+
+
+# WD <- setwd("C:\\Users\\Piet\\Documents\\Assignment2")
+# load("DD.RData")
+# 
+
+# Remove duplicates [data is already unique]
+Data_Raw <- unique(Data_Raw)
+
+
+
+# Sample 25% data from Data_Raw
+# NOTE PASSENGER ID NOT COMPLETE NOW
+Data_Raw.sample <- Data_Raw[sample(1:nrow(Data_Raw), nrow(Data_Raw)*0.25),]
+
+
+# Group by:
+
+# ddply(Data_Raw,~Data_Raw$srch_id,summarise)
+
+######################################################################################################################
+######################################################################################################################
+## DATA ANALYSIS
+
+# Every srch_id represent 1 customer  [work with cell/list data]
+
+Data_Raw.list <-  split(Data_Raw, Data_Raw$srch_id)
+
+
+
+
+######################################################################################################################
+######################################################################################################################
+
+
+
+## DATA PLOTTING
+
+summary(Data_Raw)
+
+table(Data_Raw[ ,6])
+
+
+
+######################################################################################################################
+######################################################################################################################
+## SUBSETTING THE DATA
+
+# 1. Customer Information
+Data_customer <- Data_Raw[ , 1:6]
+Data_customer <- unique(Data_customer)
+customers <- data.frame(Data_customer[, 1])
+customers <- unique(customers)
+
+# 2. Hotel Information
+Data_hotel <- Data_Raw[ , c(1, 7:17)]
+Data_hotel <- unique(Data_hotel)
+
+# 3. Search Information
+Data_search <- Data_Raw[ , c(1, 18:24) ]
+Data_search <- unique(Data_search)
+
+# 4. Probability Information
+Data_prob <- Data_Raw[ , c(1, 25:27) ]
+Data_prob <- unique(Data_prob)
+
+# 5. Competition Information
+Data_comp <- Data_Raw[ , c(1, 28:51) ]
+Data_comp <- unique(Data_comp)
+
+# 5. Information ONLY on training set
+Data_training <- Data_Raw[ , c(1, 52:54) ]
+Data_training <- unique(Data_training)
+
+######################################################################################################################
+######################################################################################################################
+# Decision tree subgroups Customers
+
+
+
+# Split Previous and Non-Previous customer's
+customers_NonRaters<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_starrating == 'NULL'])
+customers_Raters<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_starrating != 'NULL'])
+
+customers_NonBookers <- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd == 'NULL'])
+customers_Bookers<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd != 'NULL'])
+
+######################################################################################################################
+######################################################################################################################
+# Missing values
+
+
+######################################################################################################################
+######################################################################################################################
+# Handling outliers
+
+
+
+######################################################################################################################
+######################################################################################################################
+# Scatter plots
+
+# Customer location & Hotel location
+plot(Data_Raw$visitor_location_country_id, Data_Raw$prop_country_id, main="Scatterplot Example", 
+     xlab="Location consumer", ylab="Location hotel", pch=19)
+
+
+
+
+
+
+```
+
+```{r}
+
+na_count <-sapply(Data_Raw, function(y) sum(length(which(is.na(y)))))
+na_count <- data.frame(na_count)
+
+null_count <-sapply(Data_Raw, function(y) sum(length(which(y == "NULL"))))
+null_count <- data.frame(null_count)
+
+# barplot(sort(null_count$null_count),names.arg = names(null_count))
+
+```
+
+```{r}
+#Exploring the NA values in all colum
+
+training_data <- Data_Raw
+names <- names(training_data)
+missing_values = c()
+for(i in names){
+  missing_values <- c(missing_values, sum(is.na(training_data[[paste(i)]]))+sum(training_data[[paste(i)]]=="NULL")+sum(training_data[[paste(i)]]=="Null")+sum(training_data[[paste(i)]]=="null"))
+}
+# missing_values[10] <- sum(is.na(training_data$prop_review_score))
+missing_values = missing_values/nrow(training_data) 
+missing_values = setNames(missing_values, names)
+missing_values = sort(missing_values)
+
+
+
+# par(mar = c(13, 4.1, 4.1, 2.1)) #Makes sure the names are not off edge
+# barplot(missingValues, main = "Missing data", ylim = c(0,1), ylab = "Fraction missing", las=2, col = "red3")
+# abline(h=c(seq(0,1,0.2)))
+# barplot(missingValues, main = "Missing data", ylim = c(0,1), ylab = "Fraction missing", las=2, add=TRUE, col = "red3")
+# mtext(side = 1, text = "Attributes", line = 11)
+# par(mar = c(5.1, 4.1, 4.1, 2.1)) #Resetting margins to origional ones
+
+
+
+
+
+
+library(plotly)
+Sys.setenv("plotly_username"="arashparnia")
+Sys.setenv("plotly_api_key"="uocw7vRgRagIpjnQ8WR1")
+
+# 
+# p <- plot_ly(x = null_count$null_count, y = levels(null_count), type = 'bar', orientation = 'h')
+
+# Create a shareable link to your chart
+# Set up API credentials: https://plot.ly/r/getting-started
+# chart_link = plotly_POST(p, filename="horizontalbar/basic")
+# chart_link
+
+missing_values_names <- names(missing_values)
+Count <- missing_values
+data <- data.frame(missing_values_names, Count, stringsAsFactors = FALSE)
+data$missing_values_names <- factor(data$missing_values_names, levels = data$missing_values_names[order(data$Count, decreasing = TRUE)])
+
+m <- list(
+  l = 50,
+  r = 50,
+  b = 150,
+  t = 50,
+  pad = 4
+)
+f <- list(
+  family = "Courier New, monospace",
+  size = 18,
+  color = "#7f7f7f"
+)
+x <- list(
+  title = "Attribute Names",
+  titlefont = f,
+  tickfont = list(
+             size = 12)
+)
+y <- list(
+  title = "Count of missing values",
+  titlefont = f
+)
+
+
+plot_ly(data, x = ~missing_values_names, y = ~Count, type = "bar", name = 'Missing Values') %>%
+  layout( margin = m,xaxis = x, yaxis = y,bargap=100)
+ 
+
+```
+```{r}
+
+m_prop_location_score2 = c()
+for(m in Data_Raw$prop_location_score2){
+  if (m == 'NULL'){
+    m_prop_location_score2[i] = data.frame(Data_Raw$prop_location_score2[i] , Data_Raw$click_bool[i] , Data_Raw$booking_bool[i])
+  }
+}
+  
+  
+orig_destination_distance           
+comp5_inv                           
+comp5_rate                        
+comp2_inv                         
+comp8_inv                          
+comp2_rate                          
+comp8_rate                                         
+comp3_inv                                           
+comp3_rate                                         
+comp5_rate_percent_diff                                   
+comp8_rate_percent_diff      
+comp2_rate_percent_diff           
+comp3_rate_percent_diff         
+comp7_inv                          
+comp7_rate                    
+comp4_inv                            
+comp6_inv                       
+comp4_rate                             
+comp6_rate                                
+srch_query_affinity_score            
+visitor_hist_starrating               
+visitor_hist_adr_usd                
+comp7_rate_percent_diff              
+gross_bookings_usd                      
+comp1_inv                                     
+comp6_rate_percent_diff                
+comp4_rate_percent_diff                  
+comp1_rate                                 
+comp1_rate_percent_diff                      
+```
+
+
+
