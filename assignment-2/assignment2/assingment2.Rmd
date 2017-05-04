@@ -112,7 +112,9 @@ output: html_notebook
 # customers_NonBookers <- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd == 'NULL'])
 # customers_Bookers<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd != 'NULL'])
 # 
-
+```
+delete all 
+```{r}
 # Data loading
 rm(list=ls())
 ```
@@ -135,8 +137,13 @@ library(anytime)
 
 
 # WD <- setwd("C:\\Users\\Piet\\Documents\\Assignment2")
-# load("rawdata_environment.RData")
-rawdata <- read.csv("../../../Data/training_set_VU_DM_2014.csv", header= TRUE,nrows=20000)
+load("../../../data/rawdata_environment.RData")
+```
+# load from data set and save to r object
+```{r}
+# rawdata <- read.csv("../../../Data/training_set_VU_DM_2014.csv", header= TRUE)
+# save.image("rawdata_environment.RData")
+
 ```
 
 # Split data into normal data and competitior data
@@ -156,6 +163,24 @@ data.factors_totransform <-subset(data.factors, select = c(3,6:11))         # De
 datetime <- subset(data, select = c(2))
 ```
 
+# Test if the data follows a normal distibution
+```{r}
+# for (i in 2:34){                              # Does not work due to NA (instead of NULL)
+#   vector <- as.matrix(data.factors[i])
+#   vector <- vector[!vector %in% "NULL"]
+#   vector <-as.numeric(vector)
+#   print(names(data.factors[i]))
+#   print(ad.test(vector))
+# }
+# for (i in 1:19){
+#   vector <- as.matrix(data.factors[i])
+#   vector <- vector[!vector %in% "NULL"]
+#   vector <-as.numeric(vector)
+#   print(names(data.integers[i]))
+#   print(ad.test(vector))
+# }
+```
+
 # Transform specific factors into numerics
 ```{r}
 for (i in 1:7){
@@ -165,28 +190,33 @@ for (i in 1:8){
 data_comp[ , 3*i] <- as.numeric(as.character(data_comp[ ,3*i]))
 }
 
-# Transform Date time into 
+
 table(is.na(data.factors_totransform$visitor_hist_adr_usd))
 ```
 
 
 # Transform Date time
 ```{r}
-rawdata$date_time <-  anytime(as.factor(rawdata$date_time))
+data$date_time <-  anytime(as.factor(data$date_time))
 # data_raw$date_time
 # tmp <-  as.Date('3/2/2015','%m/%d/%Y')
-rawdata$year <- as.numeric(format(rawdata$date_time,'%Y'))
-rawdata$month <- as.numeric(format(rawdata$date_time,'%m'))
+data$year <- as.numeric(format(data$date_time,'%Y'))
+data$month <- as.numeric(format(data$date_time,'%m'))
 
-rawdata$yearmonth <- rawdata$year + (rawdata$month / 12)
+data$yearmonth <- data$year + (data$month / 12)
 # 
 ```
+
+
+
 # Put in transformed factors back
 ```{r}
 data[ , c(6,13,14,16,25,26,29)] <- data.factors_totransform[ ,1:7]
 
 rm(columns, rawdata, datetime, data.factors_totransform)
 ```
+
+
 # Missing values ----------------------------------------------------------------------------------------------------------------
 
 ```{r}
@@ -212,26 +242,10 @@ hist(data$prop_log_historical_price)
 
 # Testing for outliers----------------------------------------------------------------------------------------------------------------------------
 
-# Test if the data follows a normal distibution
-```{r}
-for (i in 1:34){                              # Does not work due to NA (instead of NULL)
-  vector <- as.matrix(data.factors[i])
-  vector <- vector[!vector %in% "NULL"]
-  vector <-as.numeric(vector)
-  print(names(data.factors[i]))
-  print(ad.test(vector))
-}
-for (i in 1:19){
-  vector <- as.matrix(data.factors[i])
-  vector <- vector[!vector %in% "NULL"]
-  vector <-as.numeric(vector)
-  print(names(data.integers[i]))
-  print(ad.test(vector))
-}
-```
+
 # Summarize all variables
 ```{r}
-for (i in 1:34){
+for (i in 2:34){
   name=names(data.factors[i])
   vector <- as.matrix(data.factors[i])
   vector <- vector[!vector %in% "NULL"]
@@ -416,6 +430,8 @@ missing_values = c()
 for(i in names){
   missing_values <- c(missing_values, sum(is.na(training_data[[paste(i)]]))+sum(training_data[[paste(i)]]=="NULL")+sum(training_data[[paste(i)]]=="Null")+sum(training_data[[paste(i)]]=="null"))
 }
+```
+```{r}
 # missing_values[10] <- sum(is.na(training_data$prop_review_score))
 missing_values = missing_values/nrow(training_data) 
 missing_values = setNames(missing_values, names)
@@ -429,12 +445,12 @@ missing_values = sort(missing_values)
 # barplot(missingValues, main = "Missing data", ylim = c(0,1), ylab = "Fraction missing", las=2, add=TRUE, col = "red3")
 # mtext(side = 1, text = "Attributes", line = 11)
 # par(mar = c(5.1, 4.1, 4.1, 2.1)) #Resetting margins to origional ones
+```
 
 
 
-
-
-
+# ploting 
+```{r}
 library(plotly)
 Sys.setenv("plotly_username"="arashparnia")
 Sys.setenv("plotly_api_key"="uocw7vRgRagIpjnQ8WR1")
