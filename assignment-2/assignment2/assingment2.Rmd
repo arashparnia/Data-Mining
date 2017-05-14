@@ -2,117 +2,6 @@
 title: "R Notebook"
 output: html_notebook
 ---
-
-```{r}
-# # Introduction
-# # In this script, code is written... :O
-# 
-# rm(list=ls())        # Delete workspace
-# 
-# ######################################################################################################################
-# ######################################################################################################################
-# # Installing Packages
-# # source("https://s3-us-west-2.amazonaws.com/10x.files/supp/cell-exp/rkit-install-1.1.0.R")
-# # install.packages("cellrangerRkit")
-# 
-# # Library
-# library("ggplot2")
-# # library(cellrangerRkit)
-# # packageVersion("cellrangerRkit")
-# ######################################################################################################################
-# ######################################################################################################################
-# ## DATA LOADING
-# 
-# # Read Data (sorted on time)
-# Data_Raw <- read.csv("training_set_VU_DM_2014.csv", header= TRUE,nrows=20000)
-# 
-# 
-# # WD <- setwd("C:\\Users\\Piet\\Documents\\Assignment2")
-# # load("DD.RData")
-# # 
-# 
-# # Remove duplicates [data is already unique]
-# Data_Raw <- unique(Data_Raw)
-# 
-# 
-# 
-# # Sample 25% data from Data_Raw
-# # NOTE PASSENGER ID NOT COMPLETE NOW
-# Data_Raw.sample <- Data_Raw[sample(1:nrow(Data_Raw), nrow(Data_Raw)*0.25),]
-# 
-# 
-# # Group by:
-# 
-# # ddply(Data_Raw,~Data_Raw$srch_id,summarise)
-# 
-# ######################################################################################################################
-# ######################################################################################################################
-# ## DATA ANALYSIS
-# 
-# # Every srch_id represent 1 customer  [work with cell/list data]
-# 
-# Data_Raw.list <-  split(Data_Raw, Data_Raw$srch_id)
-# 
-# 
-# 
-# 
-# ######################################################################################################################
-# ######################################################################################################################
-# 
-# 
-# 
-# ## DATA PLOTTING
-# 
-# summary(Data_Raw)
-# 
-# table(Data_Raw[ ,6])
-# 
-# 
-# 
-# ######################################################################################################################
-# ######################################################################################################################
-# ## SUBSETTING THE DATA
-# 
-# # 1. Customer Information
-# Data_customer <- Data_Raw[ , 1:6]
-# Data_customer <- unique(Data_customer)
-# customers <- data.frame(Data_customer[, 1])
-# customers <- unique(customers)
-# 
-# # 2. Hotel Information
-# Data_hotel <- Data_Raw[ , c(1, 7:17)]
-# Data_hotel <- unique(Data_hotel)
-# 
-# # 3. Search Information
-# Data_search <- Data_Raw[ , c(1, 18:24) ]
-# Data_search <- unique(Data_search)
-# 
-# # 4. Probability Information
-# Data_prob <- Data_Raw[ , c(1, 25:27) ]
-# Data_prob <- unique(Data_prob)
-# 
-# # 5. Competition Information
-# Data_comp <- Data_Raw[ , c(1, 28:51) ]
-# Data_comp <- unique(Data_comp)
-# 
-# # 5. Information ONLY on training set
-# Data_training <- Data_Raw[ , c(1, 52:54) ]
-# Data_training <- unique(Data_training)
-# 
-# ######################################################################################################################
-# ######################################################################################################################
-# # Decision tree subgroups Customers
-# 
-# 
-# 
-# # Split Previous and Non-Previous customer's
-# customers_NonRaters<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_starrating == 'NULL'])
-# customers_Raters<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_starrating != 'NULL'])
-# 
-# customers_NonBookers <- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd == 'NULL'])
-# customers_Bookers<- data.frame(Data_customer$srch_id[Data_customer$visitor_hist_adr_usd != 'NULL'])
-# 
-```
 delete all 
 ```{r}
 # Data loading
@@ -134,443 +23,160 @@ library(anytime)
 
 # Load rawdata set
 ```{r}
-
-
-# WD <- setwd("C:\\Users\\Piet\\Documents\\Assignment2")
-load("../../../data/rawdata_environment.RData")
+load("../../../Data/rawdata_environment.RData")
 ```
 # load from data set and save to r object
 ```{r}
 # rawdata <- read.csv("../../../Data/training_set_VU_DM_2014.csv", header= TRUE)
-# save.image("rawdata_environment.RData")
+# save.image("../../../Data/rawdata_environment.RData")
 
 ```
-
-# Split data into normal data and competitior data
+# make envorument file from rdata
 ```{r}
-columns <- c(28:51)
-data <- subset(rawdata, select = -columns )
-data_comp <- subset(rawdata, select = columns)
-str(data)
+# load(file = "../../../Data/data_Pclass1.RData")
+# load(file = "../../../Data/data_Pclass2.RData")
+# load(file = "../../../Data/data_Pclass3.RData")
+# load(file = "../../../Data/data_Pclass4.RData")
+# load(file = "../../../Data/data_Pclass5.RData")
+# load(file = "../../../Data/data_Pclass6.RData")
+
+# load(file = "../../../Data/dataTEST_Pclass1.RData")
+# load(file = "../../../Data/dataTEST_Pclass2.RData")
+# load(file = "../../../Data/dataTEST_Pclass3.RData")
+# load(file = "../../../Data/dataTEST_Pclass4.RData")
+# load(file = "../../../Data/dataTEST_Pclass5.RData")
+# load(file = "../../../Data/dataTEST_Pclass6.RData")
+
+
+# save.image("../../../Data/rawdata_environment.RData")
+
 ```
 
-# Split data into class: factors and integers
+# Save Data files In RData
 ```{r}
-columns <- c(2,5,6,10,12:14,16,25,26,29)
-data.integers  <- subset(data, select = -columns )
-data.factors   <- subset(data, select = columns)
-data.factors_totransform <-subset(data.factors, select = c(3,6:11))         # Delete variable srch_id
-datetime <- subset(data, select = c(2))
+# save(Data_Pclass1,file = "data_Pclass1.RData")
+# save(Data_Pclass2,file = "data_Pclass2.RData")
+# save(Data_Pclass3,file = "data_Pclass3.RData")
+# save(Data_Pclass4,file = "data_Pclass4.RData")
+# save(Data_Pclass5,file = "data_Pclass5.RData")
+# save(Data_Pclass6,file = "data_Pclass6.RData")
+# save(Data_Pclass7,file = "data_Pclass7.RData")
 ```
 
-# Test if the data follows a normal distibution
+<!-- # Save Data files In RData -->
+<!-- ```{r} -->
+<!-- write.csv(Data_Pclass1,file = "datacsv_Pclass1.csv") -->
+<!-- write.csv(Data_Pclass2,file = "datacsv_Pclass2.csv") -->
+<!-- write.csv(Data_Pclass3,file = "datacsv_Pclass3.csv") -->
+<!-- write.csv(Data_Pclass4,file = "datacsv_Pclass4.csv") -->
+<!-- write.csv(Data_Pclass5,file = "datacsv_Pclass5.csv") -->
+<!-- write.csv(Data_Pclass6,file = "datacsv_Pclass6.csv") -->
+<!-- write.csv(Data_Pclass7,file = "datacsv_Pclass7.csv") -->
+<!-- ``` -->
+
+
+
+# changing name for 
 ```{r}
-# for (i in 2:34){                              # Does not work due to NA (instead of NULL)
-#   vector <- as.matrix(data.factors[i])
-#   vector <- vector[!vector %in% "NULL"]
-#   vector <-as.numeric(vector)
-#   print(names(data.factors[i]))
-#   print(ad.test(vector))
-# }
-# for (i in 1:19){
-#   vector <- as.matrix(data.factors[i])
-#   vector <- vector[!vector %in% "NULL"]
-#   vector <-as.numeric(vector)
-#   print(names(data.integers[i]))
-#   print(ad.test(vector))
-# }
+colnames(df)[which(names(df) == "price_usd_normalized.prices_normalized")] <- "price_usd_normalized"
+df$price_usd_normalized <-  df$price_usd_normalized$prices_normalized
+names(df)
 ```
 
-# Transform specific factors into numerics
-```{r}
-for (i in 1:7){
-    data.factors_totransform[,i] <- as.numeric(as.character(data.factors_totransform[ ,i]))
-}
-for (i in 1:8){
-data_comp[ , 3*i] <- as.numeric(as.character(data_comp[ ,3*i]))
-}
-
-
-table(is.na(data.factors_totransform$visitor_hist_adr_usd))
-```
-
-
-# Transform Date time
-```{r}
-data$date_time <-  anytime(as.factor(data$date_time))
-# data_raw$date_time
-# tmp <-  as.Date('3/2/2015','%m/%d/%Y')
-data$year <- as.numeric(format(data$date_time,'%Y'))
-data$month <- as.numeric(format(data$date_time,'%m'))
-
-data$yearmonth <- data$year + (data$month / 12)
-# 
-```
-
-
-
-# Put in transformed factors back
-```{r}
-data[ , c(6,13,14,16,25,26,29)] <- data.factors_totransform[ ,1:7]
-
-rm(columns, rawdata, datetime, data.factors_totransform)
-```
-
-
-# Missing values ----------------------------------------------------------------------------------------------------------------
-
-```{r}
-stars <- data[, c(9)]
-review <- data[ ,c(10)]
-
-
-table(is.na(review))
-
-
-
-# # Usefull for replacing missing values
-## See also:  Data analysis: Tables
-booked_prices <- subset(data$prices,data$booking_bool==1)
-data$prices <- findInterval(data$price_usd, c(0,50, 100,150,225,500,1000,2000,10000))
-data$prop_log_historical_price <- findInterval(data$prop_log_historical_price, c(0,1, 3,4,5,5.5,6,6.5,7,7.5,8,8.5,9,10))
-data$booking_bool <- as.numeric(data$booking_bool)
-data$prop_location_score1 <- findInterval(data$price_usd, c(0,.5, 1,1.5,2,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9))
-hist(data$prop_log_historical_price)
-```
-
-
-
-# Testing for outliers----------------------------------------------------------------------------------------------------------------------------
-
-
-# Summarize all variables
-```{r}
-for (i in 2:34){
-  name=names(data.factors[i])
-  vector <- as.matrix(data.factors[i])
-  vector <- vector[!vector %in% "NULL"]
-  vector <-as.numeric(vector)
-  print(names(data.factors[i]))
-  print(summary(vector))
-}
-s <- summary(data.integers)
-capture.output(s, file = "sumintegers.txt")
-```
-# Reduce Variabels to be test
-```{r}
-NewData=      data[ , c(6,14,16,19,26)]
-NewData_comp= data_comp[ , c(3,6,9,12,15,18,21,24)]
-```
-
-# Plot variables with potentially outliers
-```{r}
-boxplot(NewData$visitor_hist_adr_usd[!NewData$visitor_hist_adr_usd==7800])
-boxplot(NewData[ ,2])
-boxplot(NewData[ ,3])
-boxplot(NewData[ ,4])
-boxplot(NewData$orig_destination_distance[NewData$orig_destination_distance==530596])
-
-compadata <- list()
-for (i in 1:8){
-  NewData_compa <- NewData_comp[,i][NewData_comp[ ,i]!="NULL"]
-  NewData_compa <- as.numeric(as.character(NewData_compa))
-  compadata[[i]] <- NewData_compa
-}
-
-boxplot(compadata)
-
-boxplot(data[ ,6])          # positive skew, no ground to remove outliers.
-boxplot(data[ ,14])         # negative skew, transform zero's into 1.5 values.
-boxplot(data[ ,16])         # Extreme observations in uppertail, due to data errors
-                                      # Transform values above 5000 into median price/ anova price
-boxplot(data[ ,19])         # Positive skew, no ground for erro's in data
-boxplot(data[ ,26])
-
-rm(NewData, NewData_comp, NewData_compa, compadata, vector, data.factors,data.integers)
-```
-# Handling Outliers ----------------------------------------------------------------------------------------------------------------------------
-
-# Replace prices above 10000 into the median price
-```{r}
-median(data$price_usd)
-data$price_usd[data$price_usd>10000] <- median(data$price_usd)
-
-# https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
-# normalize prices
-prices_max <- aggregate(price_usd ~ srch_id, data = data, max)
-prices_min <- aggregate(price_usd ~ srch_id, data = data, min)
-
-data2 = merge(data,prices_max,by.x=1,by.y=1)
-data2 = merge(data2,prices_min,by.x=1,by.y=1)
-
-prices_normalized <- (data2$price_usd.x -data2$price_usd)/(data2$price_usd.y - data2$price_usd)
-
-d <- data.frame(prices_normalized)
-data$price_usd_normalized <- d
-
-a <- data_comp[ ,c(3,6,9,12,15,18,21,24)]
-a[a > 300] <- 300
-data_comp[ , c(3,6,9,12,15,18,21,24)] <- a
-
-rm(a,d,prices_max,prices_min,prices_normalized,data2)
-```
-
-
-# Transform, cluster and delete variables  -----------------------------------------------------------------------------------------------------------
-
-# Creating Consumers class
-```{r}
-a<- NULLdata$srch_adults_count
-
-data$consumer <- "other"
-data$consumer[data$srch_adults_count == 1] <- "single"
-data[data$srch_adults_count == 2] <- "couple"
-parents <- data[data$srch_children_count == 2] <- 
-```
-
-
-# Data analysis: Tables -----------------------------------------------------------------------------------------------------------
-```{r}
-booked_prices <- subset(data$prices,data$booking_bool==1)
-hist(booked_prices) 
-
-table(data$booking_bool)[2] / table(data$booking_bool)[1]
-table(data$click_bool)[2] /table(data$click_bool)[1]
-
-table(data$prices[data$booking_bool==1])                # Prices in category 2:5, have highest click/bool ratio
-table(data$prices[data$click_bool==1])
-
-data$prop_log_historical_price
-
-table(data$prop_log_historical_price[data$booking_bool==1])                # Prices in category 2:5, have highest click/bool ratio
-table(data$prop_log_historical_price[data$click_bool==1])
-
-table(data$prop_starrating[data$booking_bool==1])
-table(data$prop_starrating[data$click_bool==1])
-
-table(data$prop_review_score[data$booking_bool==1])     # > 3 stars, booking rate > 1/2 click rate
-table(data$prop_review_score[data$click_bool==1])       # < 3 stars, booking rate < 1/2 click rate
-
-table(data$prop_starrating[data$booking_bool==1])       # How closer to 1, how better
-table(data$prop_starrating[data$click_bool==1])
-
-table(data$prop_location_score1[data$booking_bool==1])
-table(data$prop_location_score2[data$booking_bool==1])
-```
-
-# Score variable ----------------------------------------------------------------------------------------------------------------------------
-# If clicked, score is +1# If booked score is +5
-```{r}
-data$score <- (data$click + 5* data$book)* data$position
-```
-# Use score to analyse the Popular hotels
-# If no one would be popular (,hence random distribution), P(1 click) = 0.04, P(2 click)= 0.04^2, ..., P(n click)= 0.04^n
-```{r}
-hotelscores <- aggregate(score ~ prop_id, data = data, sum)
-hotelclicks <- aggregate(click_bool ~ prop_id, data=data, sum)
-hotelbooks <- aggregate(booking_bool ~ prop_id, data=data, sum)
-
-
-hist(log(hotelscores[,2]))
-
-hist(log(hotelclicks[,2]), prob = TRUE)
-curve(dexp(x, rate = 2.5), col = 2, lty = 2, lwd = 2, add = TRUE)
-
-hist(log(hotelbooks[,2]), prob = TRUE)
-curve(dexp(x, rate = 2.5), col = 2, lty = 2, lwd = 2, add = TRUE)
-
-```
-
-# Normalise popular hotels for every country
-
-# Subsetting the Consumers ------------------------------------------------------------------------------------------------------------------------------
-
-# Intuition: poor consumers find a low price more important. While rich consumers don't really look at the price,
-#            they just want a good rated hotel, at a good location.
-```{r}
-data$Pclass <- findInterval(data$price_usd, c(0,50, 100,150,225,500,1000,10000))
-Data <- split(data, data$Pclass)
-b <- Data[1]
-```
-# Correlations ------------------------------------------------------------------------------------------------------------------------------
-# In order to nd dependencies in the data, some time was
-# spent on looking at the correlations between dierent numerical columns. Even more important, since for
-# unknown data the values of the score-column are to be predicted, the correlation of all (numerical) variables
-# with this column was computed as well. Columns with a high mutual correlation should be added to models
-# carefully, as the training time can increase signicantly due to redundancy.
-
-
-
-# Splitting the training set.
-
-```
-
+#removing all columns with NA 
 ```{r}
 
+df <- Data_Pclass1
+df$consumer < - as.factor(df$consumer)
+
+df <- df[ , colSums(is.na(df)) == 0]
+#An alternative way is to use apply:
+# df <- df[ , apply(df, 2, function(x) !any(is.na(x)))]
 ```
 
+#all data converted to facotr
 ```{r}
-
-na_count <-sapply(Data_Raw, function(y) sum(length(which(is.na(y)))))
-na_count <- data.frame(na_count)
-
-null_count <-sapply(Data_Raw, function(y) sum(length(which(y == "NULL"))))
-null_count <- data.frame(null_count)
-
-# barplot(sort(null_count$null_count),names.arg = names(null_count))
-
-```
-
-```{r}
-#Exploring the NA values in all colum
-
-training_data <- Data_Raw
-names <- names(training_data)
-missing_values = c()
-for(i in names){
-  missing_values <- c(missing_values, sum(is.na(training_data[[paste(i)]]))+sum(training_data[[paste(i)]]=="NULL")+sum(training_data[[paste(i)]]=="Null")+sum(training_data[[paste(i)]]=="null"))
-}
-```
-```{r}
-# missing_values[10] <- sum(is.na(training_data$prop_review_score))
-missing_values = missing_values/nrow(training_data) 
-missing_values = setNames(missing_values, names)
-missing_values = sort(missing_values)
-
-
-
-# par(mar = c(13, 4.1, 4.1, 2.1)) #Makes sure the names are not off edge
-# barplot(missingValues, main = "Missing data", ylim = c(0,1), ylab = "Fraction missing", las=2, col = "red3")
-# abline(h=c(seq(0,1,0.2)))
-# barplot(missingValues, main = "Missing data", ylim = c(0,1), ylab = "Fraction missing", las=2, add=TRUE, col = "red3")
-# mtext(side = 1, text = "Attributes", line = 11)
-# par(mar = c(5.1, 4.1, 4.1, 2.1)) #Resetting margins to origional ones
+df <- as.factor(df)
 ```
 
 
+#Boruta
+Limitations
+Some limitations of the Boruta package are worth highlighting:
 
-# ploting 
-```{r}
-library(plotly)
-Sys.setenv("plotly_username"="arashparnia")
-Sys.setenv("plotly_api_key"="uocw7vRgRagIpjnQ8WR1")
-
-# 
-# p <- plot_ly(x = null_count$null_count, y = levels(null_count), type = 'bar', orientation = 'h')
-
-# Create a shareable link to your chart
-# Set up API credentials: https://plot.ly/r/getting-started
-# chart_link = plotly_POST(p, filename="horizontalbar/basic")
-# chart_link
-
-missing_values_names <- names(missing_values)
-Count <- missing_values
-data <- data.frame(missing_values_names, Count, stringsAsFactors = FALSE)
-data$missing_values_names <- factor(data$missing_values_names, levels = data$missing_values_names[order(data$Count, decreasing = TRUE)])
-
-m <- list(
-  l = 50,
-  r = 50,
-  b = 150,
-  t = 50,
-  pad = 4
-)
-f <- list(
-  family = "Courier New, monospace",
-  size = 18,
-  color = "#7f7f7f"
-)
-x <- list(
-  title = "Attribute Names",
-  titlefont = f,
-  tickfont = list(
-             size = 12)
-)
-y <- list(
-  title = "Count of missing values",
-  titlefont = f
-)
-
-
-plot_ly(data, x = ~missing_values_names, y = ~Count, type = "bar", name = 'Missing Values') %>%
-  layout( margin = m,xaxis = x, yaxis = y,bargap=100)
- 
-
-```
-
-
-converting dat time
-
-year +  month/12
-```{r}
-# install.packages("anytime")
-library(anytime)
-data_raw <- Data_Raw
-data_raw$date_time <-  anytime(as.factor(data_raw$date_time))
-# data_raw$date_time
-# tmp <-  as.Date('3/2/2015','%m/%d/%Y')
-data_raw$year <- as.numeric(format(data_raw$date_time,'%Y'))
-data_raw$month <- as.numeric(format(data_raw$date_time,'%m'))
-
-data_raw$yearmonth <- data_raw$year + (data_raw$month / 12)
-
-
-```
-
-
-something epse 
+It only works with classification (factor) target variables. I am not sure why: as far as I remember, the random forest algorithm also provides a variable significance score when it is used as a predictor, not just when it is run as a classifier.
+It does not handle missing (NA) values at all. This is quite a problem when working with real data sets, and a shame as random forests are in principle very good at handling missing values. A simple re-write of the package using the party package instead of randomForest should be able to fix this issue.
+It does not seem to be completely stable. I have crashed it on several real-world data sets and am working on a minimal set to send to the authors.
 
 
 ```{r}
+library(Boruta)
 
+# sample_data <- df[sample(nrow(df), 100), ]
+df <- as.factor(df)
+b <- Boruta(df$score, df, doTrace = 2)
+
+print(b)
 ```
 
+
+
+
+
+#random forest
 ```{r}
-# 
-# m_prop_location_score2 = c()
-# for(m in Data_Raw$prop_location_score2){
-#   if (m == 'NULL'){
-#     m_prop_location_score2[i] = data.frame(Data_Raw$prop_location_score2[i] , Data_Raw$click_bool[i] , Data_Raw$booking_bool[i])
-#   }
-# }
-#   
-#   
-# orig_destination_distance           
-# comp5_inv                           
-# comp5_rate                        
-# comp2_inv                         
-# comp8_inv                          
-# comp2_rate                          
-# comp8_rate                                         
-# comp3_inv                                           
-# comp3_rate                                         
-# comp5_rate_percent_diff                                   
-# comp8_rate_percent_diff      
-# comp2_rate_percent_diff           
-# comp3_rate_percent_diff         
-# comp7_inv                          
-# comp7_rate                    
-# comp4_inv                            
-# comp6_inv                       
-# comp4_rate                             
-# comp6_rate                                
-# srch_query_affinity_score            
-# visitor_hist_starrating               
-# visitor_hist_adr_usd                
-# comp7_rate_percent_diff              
-# gross_bookings_usd                      
-# comp1_inv                                     
-# comp6_rate_percent_diff                
-# comp4_rate_percent_diff                  
-# comp1_rate                                 
-# comp1_rate_percent_diff                      
-```
+library(randomForest)
+fit_randomForest_1 <- randomForest(score ~ 
+                                  # srch_id + 
+                                  # date_time + 
+                                  # site_id + 
+                                  # visitor_location_country_id + 
+                                  # visitor_hist_starrating + 
+                                  # prop_country_id +                       
+                                  # prop_id + 
+                                  # prop_starrating + 
+                                  # prop_review_score + 
+                                  # prop_brand_bool + 
+                                  # prop_location_score1 + 
+                                  # prop_location_score2 + 
+                                  # prop_log_historical_price + 
+                                  # position + 
+                                  # promotion_flag + 
+                                  # srch_destination_id + 
+                                  # srch_length_of_stay + 
+                                  # srch_booking_window + 
+                                  # srch_adults_count + 
+                                  # srch_children_count +                 
+                                  # srch_room_count + 
+                                  # srch_saturday_night_bool + 
+                                  price_usd_normalized +
+                                  
+                      ,
+                      data=df, 
+                      importance=TRUE, 
+                      ntree=2000)
 
 
-prop_starrating corelation matrix with other ratings and price 
-```{r}
+
+
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
