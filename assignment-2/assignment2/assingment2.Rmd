@@ -63,16 +63,26 @@ load("../../../Data/rawdata_environment.RData")
 # save(Data_Pclass7,file = "data_Pclass7.RData")
 ```
 
-<!-- # Save Data files In RData -->
-<!-- ```{r} -->
-<!-- write.csv(Data_Pclass1,file = "datacsv_Pclass1.csv") -->
-<!-- write.csv(Data_Pclass2,file = "datacsv_Pclass2.csv") -->
-<!-- write.csv(Data_Pclass3,file = "datacsv_Pclass3.csv") -->
-<!-- write.csv(Data_Pclass4,file = "datacsv_Pclass4.csv") -->
-<!-- write.csv(Data_Pclass5,file = "datacsv_Pclass5.csv") -->
-<!-- write.csv(Data_Pclass6,file = "datacsv_Pclass6.csv") -->
-<!-- write.csv(Data_Pclass7,file = "datacsv_Pclass7.csv") -->
-<!-- ``` -->
+# Save Data files In RData
+```{r}
+
+# Data_Pclass1 <- Data_Pclass1[ , colSums(is.na(Data_Pclass1)) == 0]
+# Data_Pclass1 <- data.frame(Data_Pclass1)
+# Data_Pclass1 <- as.factor(Data_Pclass1)
+write.csv(Data_Pclass1,file = "../../../Data/datacsv_Pclass1.csv")
+
+
+
+
+sData_Pclass2 <- Data_Pclass2[ , colSums(is.na(Data_Pclass2)) == 0]
+write.csv(Data_Pclass2,file = "../../../Data/datacsv_Pclass2.csv")
+
+write.csv(Data_Pclass3,file = "../../../Data/datacsv_Pclass3.csv")
+write.csv(Data_Pclass4,file = "../../../Data/datacsv_Pclass4.csv")
+write.csv(Data_Pclass5,file = "../../../Data/datacsv_Pclass5.csv")
+write.csv(Data_Pclass6,file = "../../../Data/datacsv_Pclass6.csv")
+write.csv(Data_Pclass7,file = "../../../Data/datacsv_Pclass7.csv")
+```
 
 
 
@@ -87,7 +97,7 @@ names(df)
 ```{r}
 
 df <- Data_Pclass1
-df$consumer < - as.factor(df$consumer)
+# df$consumer < - as.factor(df$consumer)
 
 df <- df[ , colSums(is.na(df)) == 0]
 #An alternative way is to use apply:
@@ -96,7 +106,7 @@ df <- df[ , colSums(is.na(df)) == 0]
 
 #all data converted to facotr
 ```{r}
-df <- as.factor(df)
+# df <- as.factor(df)
 ```
 
 
@@ -112,14 +122,45 @@ It does not seem to be completely stable. I have crashed it on several real-worl
 ```{r}
 library(Boruta)
 
-# sample_data <- df[sample(nrow(df), 100), ]
-df <- as.factor(df)
-b <- Boruta(df$score, df, doTrace = 2)
+sample_data <- df[sample(nrow(df), 10000), ]
+# df <- as.factor(df)
+b <- Boruta(score ~ 
+                                  srch_id + 
+                                  date_time + 
+                                  site_id + 
+                                  visitor_location_country_id + 
+                                  visitor_hist_starrating + 
+                                  prop_country_id +                       
+                                  prop_id + 
+                                  prop_starrating + 
+                                  prop_review_score + 
+                                  prop_brand_bool + 
+                                  prop_location_score1 + 
+                                  prop_location_score2 + 
+                                  prop_log_historical_price + 
+                                  position + 
+                                  promotion_flag + 
+                                  srch_destination_id + 
+                                  srch_length_of_stay + 
+                                  srch_booking_window + 
+                                  srch_adults_count + 
+                                  srch_children_count +                 
+                                  srch_room_count + 
+                                  srch_saturday_night_bool + 
+                                  # price_usd_normalized +
+                                  consumer
+                      ,
+                      data=df, doTrace = 0)
 
 print(b)
 ```
 
-
+Boruta performed 99 iterations in 6.879991 mins.
+ 13 attributes confirmed important: date_time, prop_brand_bool, prop_country_id, prop_location_score1,
+prop_location_score2 and 8 more;
+ 5 attributes confirmed unimportant: prop_id, srch_children_count, srch_room_count, srch_saturday_night_bool,
+visitor_hist_starrating;
+ 5 tentative attributes left: consumer, position, promotion_flag, srch_adults_count, srch_id;
 
 
 
@@ -172,9 +213,27 @@ fit_randomForest_1 <- randomForest(score ~
 
 
 
+K-means
+```{r}
+# df <- na.omit(df)
+# df <- df[!is.na(df[,1]),]
+set.seed(20)
+# df<- df[-c("price_usd_normalized")]
+library(fpc)
 
+clusters <- pamk(df[29:30], krange=2:10, criterion="ch", usepam=FALSE, diss=FALSE)
+# cluster <- kmeans(df[29:30], 200)
+# cluster
+```
 
-
+```{r}
+# Model Based Clustering
+citation("mclust")
+library(mclust)
+fit <- Mclust(df[1:20])
+plot(fit) # plot results 
+summary(fit) # display the best model
+```
 
 
 
