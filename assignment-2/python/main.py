@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn.cluster as cluster
 import time
-
+import validation
 
 
 
@@ -45,7 +45,7 @@ import time
 
 
 # load .RData and converts to pd.DataFrame
-data_train = robjects.r.load('../../../Data/data_Pclass2.RData')
+data_train = robjects.r.load('../../../Data/data_Pclass1.RData')
 data_Pclass1 = com.load_data(data_train[0])
 data = data_Pclass1.select_dtypes(['number'])
 data =  data[[
@@ -75,7 +75,7 @@ data =  data[[
 
 
 
-X_train, X_test, y_train, y_test = train_test_split(data, data['score'], test_size=0.5, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(data, data['score'], test_size=0.7, random_state=42)
 
 
 
@@ -182,18 +182,25 @@ rf.fit(X_train, y_train)
 y_result = rf.predict(X_test)
 
 
-plt.scatter(y_test,y_result)
+
+
+
+
+print(validation.ndcg_score(y_test,y_result))
+
+
+
+
+
+
+sns.set_context('poster')
+sns.set_color_codes()
+plot_kwds = {'alpha' : 0.25, 's' : 80, 'linewidths':0}
+
+
+plt.scatter(y_test,y_result,  **plot_kwds)
+
 plt.show()
-
-
-
-
-
-
-
-
-
-
 
 
 
