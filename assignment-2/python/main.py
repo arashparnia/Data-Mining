@@ -1,8 +1,9 @@
-
 from pandas.io.parsers import read_csv
-from sklearn.cross_validation import train_test_split
+from rpy2.robjects import r, pandas2ri
+from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.cross_validation import cross_val_score
+from sklearn.model_selection import cross_val_score
+
 from boruta import BorutaPy
 from pprint import pprint
 # from matplotlib import interactive
@@ -10,7 +11,7 @@ from pprint import pprint
 
 import matplotlib.pyplot as plt
 import rpy2.robjects as robjects
-import pandas.rpy.common as com
+# import pandas.rpy.common as com
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -18,8 +19,6 @@ import seaborn as sns
 import sklearn.cluster as cluster
 import time
 import validation
-
-
 
 # interactive(True)
 
@@ -45,42 +44,64 @@ import validation
 
 
 # load .RData and converts to pd.DataFrame
-data_train = robjects.r.load('../../../Data/data_Pclass1.RData')
-data_Pclass1 = com.load_data(data_train[0])
-data = data_Pclass1.select_dtypes(['number'])
-data =  data[[
-             'score',
-             'srch_id',
-             'date_time',
-             'site_id',
-             'visitor_location_country_id',
-             'prop_country_id',
-             'prop_id',
-             'prop_starrating',
-             'prop_brand_bool',
-             'prop_location_score2',
-             'prop_log_historical_price',
-             'price_usd',
-             'promotion_flag',
-             'srch_destination_id',
-             'srch_length_of_stay',
-             'srch_booking_window',
-             'srch_adults_count',
-             'srch_children_count',
-             'srch_room_count',
-             'srch_saturday_night_bool',
-             'random_bool',
-             'Pclass'
-             ]]
 
 
-
-X_train, X_test, y_train, y_test = train_test_split(data, data['score'], test_size=0.7, random_state=42)
-
+# print(data.head())
 
 
+# robject = robjects.r.load('../../../Data/data_Pclass1.RData')
+
+# robject = robjects.r.data(robject)
+
+# robject = r['Data_Pclass1']
+
+# print(robject.head())
 
 
+# pandas2ri.activate()
+# data_train=pandas2ri.ri2py(robject)
+
+# data = com.load_data(robject)
+# data = pd.DataFrame(data=data_train)
+# print(data.describe())
+# exit(0)
+
+# print(pd.isnull(data_Pclass1['price_usd_normalized']).sum() / len(data_Pclass1['price_usd_normalized']) )
+# print(data_Pclass1['price_usd_normalized'])
+# exit(0)
+# data = data_Pclass1.select_dtypes(['number'])
+
+data = pd.read_csv('../../../Data/datacsv_Pclass1.csv')
+
+# exit(0)
+y = (data['score'])
+x = data[[
+    # 'srch_id',
+    # 'site_id',
+    # 'prop_id',
+    'prop_starrating',
+    # 'prop_review_score',
+    # 'prop_brand_bool',
+    # 'prop_location_score1',
+    # 'prop_location_score2',
+    # 'position',
+    # 'price_usd',
+    # 'promotion_flag',
+    # 'srch_saturday_night_bool',
+    # 'random_bool',
+    # 'click_bool',
+    # 'booking_bool',
+    # 'price_usd_normalized',
+    # 'consumer',
+    'Pclass'
+    # 'score'
+]]
+# print(y)
+# print(data.head())
+# print((data['score'] == 0 ).sum())
+X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.7, random_state=42)
+
+# print(type(y_train))
 # data_test = robjects.r.load('../../../Data/dataTEST_Pclass1.RData')
 # data_Pclass1_test = com.load_data(data_test[0])
 # data_test =  data_Pclass1_test.select_dtypes(['number'])
@@ -170,10 +191,18 @@ X_train, X_test, y_train, y_test = train_test_split(data, data['score'], test_si
 
 
 # rf = RandomForestClassifier(n_jobs=-1, class_weight='auto', max_depth=7)
-rf = RandomForestClassifier(n_jobs=-1, class_weight='auto',)
-
+print("random forest")
+rf = RandomForestClassifier(n_jobs=-1, class_weight='auto' )
 
 rf.fit(X_train, y_train)
+
+print("cross validation")
+scores = cross_val_score(rf, data, data['score'], cv=5)
+
+scores
+
+exit(0)
+
 
 # print( np.mean(cross_val_score(rf, X_train, y_train, cv=10)))
 
@@ -181,35 +210,22 @@ rf.fit(X_train, y_train)
 
 y_result = rf.predict(X_test)
 
-
-
-
-
-
-print(validation.ndcg_score(y_test,y_result))
-
-
-
-
-
+print(validation.ndcg_score(y_test, y_result))
 
 sns.set_context('poster')
 sns.set_color_codes()
-plot_kwds = {'alpha' : 0.25, 's' : 80, 'linewidths':0}
+plot_kwds = {'alpha': 0.25, 's': 80, 'linewidths': 0}
 
-
-plt.scatter(y_test,y_result,  **plot_kwds)
+plt.scatter(y_test, y_result, **plot_kwds)
 
 plt.show()
-
-
-
 
 exit(0)
 # %matplotlib inline
 sns.set_context('poster')
 sns.set_color_codes()
-plot_kwds = {'alpha' : 0.25, 's' : 80, 'linewidths':0}
+plot_kwds = {'alpha': 0.25, 's': 80, 'linewidths': 0}
+
 
 def plot_clusters(data, algorithm, args, kwds):
     start_time = time.time()
@@ -248,6 +264,3 @@ frame = plt.gca()
 frame.axes.get_xaxis().set_visible(False)
 frame.axes.get_yaxis().set_visible(False)
 plt.show()
-
-
-

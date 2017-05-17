@@ -23,7 +23,7 @@ library(anytime)
 
 # Load rawdata set
 ```{r}
-load("../../../Data/rawdata_environment.RData")
+# load("../../../Data/rawdata_environment.RData")
 ```
 # load from data set and save to r object
 ```{r}
@@ -33,12 +33,12 @@ load("../../../Data/rawdata_environment.RData")
 ```
 # make envorument file from rdata
 ```{r}
-# load(file = "../../../Data/data_Pclass1.RData")
-# load(file = "../../../Data/data_Pclass2.RData")
-# load(file = "../../../Data/data_Pclass3.RData")
-# load(file = "../../../Data/data_Pclass4.RData")
-# load(file = "../../../Data/data_Pclass5.RData")
-# load(file = "../../../Data/data_Pclass6.RData")
+load(file = "../../../Data/data_Pclass1.RData")
+load(file = "../../../Data/data_Pclass2.RData")
+load(file = "../../../Data/data_Pclass3.RData")
+load(file = "../../../Data/data_Pclass4.RData")
+load(file = "../../../Data/data_Pclass5.RData")
+load(file = "../../../Data/data_Pclass6.RData")
 
 # load(file = "../../../Data/dataTEST_Pclass1.RData")
 # load(file = "../../../Data/dataTEST_Pclass2.RData")
@@ -66,32 +66,23 @@ load("../../../Data/rawdata_environment.RData")
 # Save Data files In RData
 ```{r}
 
-# Data_Pclass1 <- Data_Pclass1[ , colSums(is.na(Data_Pclass1)) == 0]
-# Data_Pclass1 <- data.frame(Data_Pclass1)
-# Data_Pclass1 <- as.factor(Data_Pclass1)
+Data_Pclass1 <- subset(Data_Pclass1, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass1,file = "../../../Data/datacsv_Pclass1.csv")
-
-
-
-
-sData_Pclass2 <- Data_Pclass2[ , colSums(is.na(Data_Pclass2)) == 0]
+Data_Pclass2 <- subset(Data_Pclass2, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass2,file = "../../../Data/datacsv_Pclass2.csv")
-
+Data_Pclass3 <- subset(Data_Pclass3, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass3,file = "../../../Data/datacsv_Pclass3.csv")
+Data_Pclass4 <- subset(Data_Pclass4, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass4,file = "../../../Data/datacsv_Pclass4.csv")
+Data_Pclass5 <- subset(Data_Pclass5, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass5,file = "../../../Data/datacsv_Pclass5.csv")
+Data_Pclass6 <- subset(Data_Pclass6, select = -c(price_usd_normalized) )
 write.csv(Data_Pclass6,file = "../../../Data/datacsv_Pclass6.csv")
-write.csv(Data_Pclass7,file = "../../../Data/datacsv_Pclass7.csv")
 ```
 
 
 
-# changing name for 
-```{r}
-colnames(df)[which(names(df) == "price_usd_normalized.prices_normalized")] <- "price_usd_normalized"
-df$price_usd_normalized <-  df$price_usd_normalized$prices_normalized
-names(df)
-```
+
 
 #removing all columns with NA 
 ```{r}
@@ -99,11 +90,16 @@ names(df)
 df <- Data_Pclass1
 # df$consumer < - as.factor(df$consumer)
 
-df <- df[ , colSums(is.na(df)) == 0]
+# df <- df[ , colSums(is.na(df)) == 0]
 #An alternative way is to use apply:
 # df <- df[ , apply(df, 2, function(x) !any(is.na(x)))]
 ```
+# changing name for 
+```{r}
+colnames(df)[which(names(df) == "price_usd_normalized.prices_normalized")] <- "price_usd_normalized"
 
+names(df)
+```
 #all data converted to facotr
 ```{r}
 # df <- as.factor(df)
@@ -122,35 +118,30 @@ It does not seem to be completely stable. I have crashed it on several real-worl
 ```{r}
 library(Boruta)
 
-sample_data <- df[sample(nrow(df), 10000), ]
+# sample_data <- df[sample(nrow(df), 10000), ]
 # df <- as.factor(df)
 b <- Boruta(score ~ 
                                   srch_id + 
-                                  date_time + 
-                                  site_id + 
-                                  visitor_location_country_id + 
-                                  visitor_hist_starrating + 
-                                  prop_country_id +                       
+                                  site_id +                     
                                   prop_id + 
                                   prop_starrating + 
                                   prop_review_score + 
                                   prop_brand_bool + 
                                   prop_location_score1 + 
                                   prop_location_score2 + 
-                                  prop_log_historical_price + 
                                   position + 
+                                  price_usd +
                                   promotion_flag + 
-                                  srch_destination_id + 
-                                  srch_length_of_stay + 
-                                  srch_booking_window + 
-                                  srch_adults_count + 
-                                  srch_children_count +                 
-                                  srch_room_count + 
-                                  srch_saturday_night_bool + 
-                                  # price_usd_normalized +
-                                  consumer
-                      ,
-                      data=df, doTrace = 0)
+                                  srch_saturday_night_bool +
+                                  random_bool+ 
+                                  click_bool +
+                                  booking_bool+             
+                                  price_usd_normalized+
+                                  consumer+
+                                  Pclass
+                  ,data=df, doTrace = 0)
+
+
 
 print(b)
 ```
@@ -166,39 +157,70 @@ visitor_hist_starrating;
 
 #random forest
 ```{r}
+
+library(caret)
 library(randomForest)
-fit_randomForest_1 <- randomForest(score ~ 
+library(doParallel)
+
+cores <- 4
+cl <- makePSOCKcluster(cores)
+registerDoParallel(cl)
+
+
+# 3 times cross validation.
+my_control <- trainControl(method = "cv", number = 3 )
+
+my_forest <- train(score ~ 
                                   # srch_id + 
-                                  # date_time + 
-                                  # site_id + 
-                                  # visitor_location_country_id + 
-                                  # visitor_hist_starrating + 
-                                  # prop_country_id +                       
+                                  # site_id +                     
                                   # prop_id + 
-                                  # prop_starrating + 
-                                  # prop_review_score + 
-                                  # prop_brand_bool + 
-                                  # prop_location_score1 + 
-                                  # prop_location_score2 + 
-                                  # prop_log_historical_price + 
-                                  # position + 
-                                  # promotion_flag + 
-                                  # srch_destination_id + 
-                                  # srch_length_of_stay + 
-                                  # srch_booking_window + 
-                                  # srch_adults_count + 
-                                  # srch_children_count +                 
-                                  # srch_room_count + 
-                                  # srch_saturday_night_bool + 
-                                  price_usd_normalized +
-                                  
-                      ,
-                      data=df, 
-                      importance=TRUE, 
-                      ntree=2000)
+                                  prop_starrating +
+                                  prop_review_score +
+                                  prop_brand_bool +
+                                  prop_location_score1 +
+                                  prop_location_score2 +
+                                  position +
+                                  price_usd +
+                                  promotion_flag +
+                                  # srch_saturday_night_bool +
+                                  # random_bool+ 
+                                  # click_bool +
+                                  # booking_bool+
+                                  # consumer+
+                                  Pclass ,
+                   data = df,
+                   method = "parRF",
+                   ntree = 250,
+                   trControl=my_control)
 
 
-
+summary(my_forest)
+# library(randomForest)
+# fit_randomForest_1 <- randomForest(score ~ 
+#                                   # srch_id + 
+#                                   # site_id +                     
+#                                   # prop_id + 
+#                                   prop_starrating +
+#                                   prop_review_score +
+#                                   prop_brand_bool +
+#                                   prop_location_score1 +
+#                                   prop_location_score2 +
+#                                   position +
+#                                   price_usd +
+#                                   promotion_flag +
+#                                   # srch_saturday_night_bool +
+#                                   # random_bool+ 
+#                                   # click_bool +
+#                                   # booking_bool+
+#                                   # consumer+
+#                                   Pclass 
+#                       ,
+#                       data=df, 
+#                       importance=TRUE, 
+#                       ntree=2)
+# 
+# 
+# summary(fit_randomForest_1)
 
 
 ```
@@ -209,6 +231,33 @@ fit_randomForest_1 <- randomForest(score ~
 
 
 
+```{r}
+# install.packages('party')
+library(party)
+ set.seed(415)
+fit_cforest <- cforest(score ~ 
+                                  # srch_id + 
+                                  # site_id +                     
+                                  # prop_id + 
+                                  prop_starrating +
+                                  prop_review_score +
+                                  prop_brand_bool +
+                                  prop_location_score1 +
+                                  prop_location_score2 +
+                                  position +
+                                  price_usd +
+                                  promotion_flag +
+                                  # srch_saturday_night_bool +
+                                  # random_bool+ 
+                                  # click_bool +
+                                  # booking_bool+
+                                  # consumer+
+                                  Pclass 
+                                  ,
+                 data = df, 
+                 controls=cforest_unbiased(ntree=20, mtry=3))
+
+```
 
 
 
