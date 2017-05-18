@@ -1,5 +1,6 @@
 from pandas.io.parsers import read_csv
 from rpy2.robjects import r, pandas2ri
+from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
@@ -27,20 +28,37 @@ import algorithms
 
 
 
-data = pd.read_csv('../../../Data/datacsv_Pclass1.csv')
+data = pd.read_csv('../../../Data/datacsv_Pclass2.csv')
 
-algorithms.randomForst_to_ndcg(data)
+data = algorithms.pre_process(data)
 
-algorithms.gradientBoosting(data)
+
+# data = data.sample(100)
+
+# algorithms.feature_importance(data)
+# algorithms.featureselection(data)
+# algorithms.pipeline_anova(data)
+# algorithms.randomForst_to_ndcg(data)
+#
+# algorithms.gradientBoosting(data)
+
+algorithms.knearestClassifier(data)
 
 # data = pd.read_csv('../../../Data/datacsv_Pclass2.csv')
-# print(algorithms.randomForst_to_ndcg(data))
+# algorithms.randomForst_to_ndcg(data)
 #
 # data = pd.read_csv('../../../Data/datacsv_Pclass3.csv')
-# print(algorithms.randomForst_to_ndcg(data))
+# algorithms.randomForst_to_ndcg(data)
 #
 # data = pd.read_csv('../../../Data/datacsv_Pclass4.csv')
-# print(algorithms.randomForst_to_ndcg(data))
+# algorithms.randomForst_to_ndcg(data)
+
+# data = pd.read_csv('../../../Data/datacsv_Pclass5.csv')
+# algorithms.randomForst_to_ndcg(data)
+# algorithms.gradientBoosting(data)
+# algorithms.knearestClassifier(data)
+# data = pd.read_csv('../../../Data/datacsv_Pclass6.csv')
+# algorithms.randomForst_to_ndcg(data)
 
 exit(0)
 
