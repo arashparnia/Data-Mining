@@ -313,7 +313,7 @@ def gradientBoosting(data):
 
 def knearestClassifier(data):
     labels = [
-        # 'srch_id',
+        'srch_id',
         # 'site_id',
         # 'prop_id',
         'prop_starrating',
@@ -346,28 +346,28 @@ def knearestClassifier(data):
 
     knn = KNeighborsClassifier(n_jobs=-1,algorithm='auto',n_neighbors=5,weights='distance',leaf_size=30)
 
-    sfs1 = SFS(knn,
-               k_features=1,
-               forward=False,
-               floating=False,
-               verbose=2,
-               scoring='accuracy',
-               cv=5,
-               skip_if_stuck=True,
-               n_jobs=-1,
-               )
+    # sfs1 = SFS(knn,
+    #            k_features=1,
+    #            forward=False,
+    #            floating=False,
+    #            verbose=2,
+    #            scoring='accuracy',
+    #            cv=5,
+    #            skip_if_stuck=True,
+    #            n_jobs=-1,
+    #            )
+    #
+    # sfs1.fit(X_train, y_train)
 
-    sfs1.fit(X_train, y_train)
-
-    # knn.fit(X_train, y_train)
+    knn.fit(X_train, y_train)
 
 
-    print('\nSequential Forward Selection (k=3):')
-    print(sfs1.k_feature_idx_)
-    print('CV Score:')
-    print(sfs1.k_score_)
-
-    print(pd.DataFrame.from_dict(sfs1.get_metric_dict()).T)
+    # print('\nSequential Forward Selection (k=3):')
+    # print(sfs1.k_feature_idx_)
+    # print('CV Score:')
+    # print(sfs1.k_score_)
+    #
+    # print(pd.DataFrame.from_dict(sfs1.get_metric_dict()).T)
 
     # ig1 = plot_sfs(sfs1.get_metric_dict(), kind='std_dev')
     #
@@ -378,25 +378,31 @@ def knearestClassifier(data):
 
 
 
+    # print('Selected features:', sfs1.k_feature_idx_)
+    #
+    # fig = plot_sfs(sfs1.get_metric_dict(), kind='std_err')
 
-    fig = plot_sfs(sfs1.get_metric_dict(), kind='std_err')
-
-    plt.title('Sequential Forward Selection (w. StdErr)')
-    plt.grid()
-    plt.show()
+    # plt.title('Sequential Forward Selection (w. StdErr)')
+    # plt.grid()
+    # plt.show()
 
 
-    print('Selected features:', sfs1.k_feature_idx_)
 
-    exit(0)
+    # exit(0)
 
     mse = mean_squared_error(y_test, knn.predict(X_test))
     print("MSE: %.6f" % mse)
 
     y_result = knn.predict(X_test)
 
-    ndcgScore = validation.ndcg_score(y_test, y_result)
+    import nDCG
+    ndcgScore = nDCG.nDCG(float(y_result),float(y_test),[1])
+    # ndcgScore = validation.ndcg_score(y_test, y_result)
     print("ndcg: %.6f" % ndcgScore)
+
+
+
+
 
     # feature_importance = knn.feature_importances_
     # # make importances relative to max importance
