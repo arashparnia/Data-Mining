@@ -1,3 +1,5 @@
+from pprint import pprint
+
 from sklearn import ensemble, preprocessing
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -26,7 +28,12 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
 import validation
+
+
+
 def pre_process(data):
+
+
     preprocessing.normalize(data['price_usd'], axis=1, norm='l2', copy=False)
     data = data.apply(lambda x: pd.factorize(x)[0])
     return data
@@ -244,6 +251,11 @@ def randomForst_to_ndcg(data):
     # plt.tight_layout()
     plt.show()
 
+    yyr = pd.DataFrame(y_result)
+    yyt = pd.DataFrame(y_test)
+
+    print(yyr)
+    print(yyt)
 
 
 def gradientBoosting(data):
@@ -313,9 +325,9 @@ def gradientBoosting(data):
 
 def knearestClassifier(data):
     labels = [
-        'srch_id',
+        # 'srch_id',
         # 'site_id',
-        # 'prop_id',
+        'prop_id',
         'prop_starrating',
         'prop_review_score',
         'prop_brand_bool',
@@ -329,19 +341,22 @@ def knearestClassifier(data):
         # 'click_bool',
         # 'booking_bool',
         # 'price_usd_normalized',
-        'consumer',
+        # 'consumer',
         # 'Pclass'
         # 'score'
+        'dcg_score'
     ]
 
 
-    y = (data['score'])
+    y = (data['dcg_score'])
 
     x = data[labels]
-    x = StandardScaler().fit_transform(x)
+    # x = StandardScaler().fit_transform(x)
 
-    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
 
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=42)
+
+    # pprint(X_train)
     print("KNeighborsClassifier")
 
     knn = KNeighborsClassifier(n_jobs=-1,algorithm='auto',n_neighbors=5,weights='distance',leaf_size=30)
@@ -390,17 +405,31 @@ def knearestClassifier(data):
 
     # exit(0)
 
-    mse = mean_squared_error(y_test, knn.predict(X_test))
-    print("MSE: %.6f" % mse)
+    # mse = mean_squared_error(y_test, knn.predict(X_test))
+    # print("MSE: %.6f" % mse)
 
     y_result = knn.predict(X_test)
 
+    X_test = pd.DataFrame(X_test)
+    X_test['prediction'] = y_result
+
+    pprint(X_test)
+
+
+
+
+
     import nDCG
-    ndcgScore = nDCG.nDCG(float(y_result),float(y_test),[1])
+    # ndcgScore = nDCG.nDCG(float(y_result),float(y_test),[1])
     # ndcgScore = validation.ndcg_score(y_test, y_result)
-    print("ndcg: %.6f" % ndcgScore)
+    # print("ndcg: %.6f" % ndcgScore)
 
 
+    # yr = y_result.tolist()
+    # yt = y_test.tolist()
+    # for i in range(10000):
+    #     if yr[i] > 0 and yt[i] >0:
+    #         print('prediction=', yr[i] , ' ground truth = ' , yt[i])
 
 
 

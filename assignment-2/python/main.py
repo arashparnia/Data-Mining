@@ -23,7 +23,7 @@ import validation
 # interactive(True)
 
 import algorithms
-
+import nDCG
 
 
 # result for k nearest pclass2
@@ -57,12 +57,26 @@ import algorithms
 
 
 
-data = pd.read_csv('../../../Data/datacsv_Pclass3.csv') # change to pclass 2
+data = pd.read_csv('../../../Data/datacsv_Pclass1.csv') # change to pclass 2
+
+# data = pd.DataFrame(data)
+# data = data.sample(100)
+
+# pprint(data.head())
+
+
+
+
+# pprint(srch_id_groups.head())
+data = nDCG.ndcg(data)
+pprint(data)
+#
+exit(0)
 
 data = algorithms.pre_process(data)
 
 
-data = data.sample(1000)
+
 # 2l22111gorithms.feature_importance(data)
 # algorithms.featureselection(data)
 # algorithms.pipeline_anova(data)
