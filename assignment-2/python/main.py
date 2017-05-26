@@ -57,8 +57,8 @@ import nDCG
 
 
 
-data = pd.read_csv('../../../Data/datacsv_Pclass1.csv') # change to pclass 2
-
+data = pd.read_csv('../../../Data/data.csv',nrows = 100)
+# data = pd.read_csv('../../../Data/data.csv')
 # data = pd.DataFrame(data)
 # data = data.sample(100)
 
@@ -69,8 +69,7 @@ data = pd.read_csv('../../../Data/datacsv_Pclass1.csv') # change to pclass 2
 
 # pprint(srch_id_groups.head())
 data = nDCG.ndcg(data)
-pprint(data)
-#
+
 exit(0)
 
 data = algorithms.pre_process(data)

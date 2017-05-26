@@ -6,26 +6,31 @@ from pprint import pprint
 def dcg(data):
     data = pd.DataFrame(data)
     data['dcg_score'] =0
-    data.reset_index()
+    data['dcg_index'] = list(range(data.shape[0]))
+    data['dcg_index'] = data['dcg_index'] +1
+    # data.reset_index()
     data.ix[data['click_bool'] == 1, 'dcg_score'] = 1
-    data.ix[data['booking_bool'] == 1, 'dcg_score'] = 5  # pow(2,5)
-    data['dcg_score'] = data['dcg_score'] / (data.index + 1)  # log2(data.index)
+    data.ix[data['booking_bool'] == 1, 'dcg_score'] = pow(2,5)
+
+    # pprint(data['dcg_index'] )
+    data['dcg_index'].apply(log2)
+    data['dcg_score'] = data['dcg_score'] / data['dcg_index']
+    # data['dcg_score'] = data['dcg_score'] / log2((float(data.index + 1)))  # log2(data.index)
+    # pprint( data)
+    max_dcg = max(data['dcg_score'])
+    return ('max dcg =', max_dcg)
 
 def ndcg(data,g = 'srch_id'):
 
     newdata = pd.DataFrame()
     srch_id_groups = data.groupby(g)
 
-
-    # dd = ()
-    # for df in dfs:
-    #     pprint(df)
-    #     dd = dd + dcg(df)
-    #     pprint(dd)
-    # pprint(df)
     dfs =[]
+    ndcg_scores = list()
     for name, group in srch_id_groups:
-        dcg(group)
+        max_dcg = dcg(group)
+        sum_dcg = sum(group['dcg_score'])
+        ndcg_scores.append(sum_dcg/max_dcg)
         dfs.append(group)
     data = pd.concat(dfs)
     pprint(max(data['dcg_score']))
