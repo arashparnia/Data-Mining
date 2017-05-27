@@ -43,35 +43,35 @@ import validation
 
 def pre_process(data):
     preprocessing.normalize(data['price_usd'], axis=1, norm='l2', copy=False)
-    data = data.apply(lambda x: pd.factorize(x)[0])
+    # data = data.apply(lambda x: pd.factorize(x)[0])
     return data
 
 def compare_classifiers(data):
     labels = [
         # 'srch_id',
         # 'site_id',
-        'prop_id',
-        'prop_starrating',
-        'prop_review_score',
-        'prop_brand_bool',
+        # 'prop_id',
+        # 'prop_starrating',
+        # 'prop_review_score',
+        # 'prop_brand_bool',
         'prop_location_score1',
         'prop_location_score2',
         # 'position',
         'price_usd',
-        'promotion_flag',
+        # 'promotion_flag',
         # 'srch_saturday_night_bool',
         # 'random_bool',
         # 'click_bool',
-        'booking_bool',
+        # 'booking_bool',
         # 'price_usd_normalized',
         # 'consumer',
-        'Pclass',
+        # 'Pclass',
         # 'score'
         # 'dcg_score'
     ]
 
     # data['dcg_score'] = data['dcg_score'].apply(lambda x: pd.factorize(x)[0])
-    y = (data['booking_bool'])
+    y = (data['score'])
 
     x = data[labels]
     # x = StandardScaler().fit_transform(x)
@@ -462,26 +462,32 @@ def gradientBoosting(data):
 
 def knearestClassifier(data):
     labels = [
-        # 'srch_id',
+        'srch_id',
         # 'site_id',
-        # 'prop_id',
-        'prop_starrating',
-        'prop_review_score',
-        'prop_brand_bool',
+        'prop_id',
+        # 'prop_starrating',
+        # 'prop_review_score',
+        # 'prop_brand_bool',
         'prop_location_score1',
         'prop_location_score2',
         # 'position',
         'price_usd',
-        'promotion_flag',
+        # 'promotion_flag',
         # 'srch_saturday_night_bool',
         # 'random_bool',
-        # 'click_bool',
-        # 'booking_bool',
+        'click_bool',
+        'booking_bool',
         # 'price_usd_normalized',
-        'consumer',
-        'Pclass',
+        # 'consumer',
+        # 'Pclass',
         # 'score'
         # 'dcg_score'
+    ]
+
+    ndcg_labels = [
+        'prop_id',
+        'random_bool',
+        'booking_bool'
     ]
 
     # data['dcg_score'] = data['dcg_score'].apply(lambda x: pd.factorize(x)[0])
@@ -498,28 +504,28 @@ def knearestClassifier(data):
 
     knn = KNeighborsClassifier(n_jobs=-1,algorithm='auto',n_neighbors=1,weights='distance',leaf_size=30)
 
-    sfs1 = SFS(knn,
-               k_features=3,
-               forward=False,
-               floating=False,
-               verbose=2,
-               scoring='accuracy',
-               cv=5,
-               skip_if_stuck=True,
-               n_jobs=-1,
-               )
-
-    sfs1.fit(X_train, y_train)
-
-    # knn.fit(X_train, y_train)
-
-
-    print('\nSequential Forward Selection (k=3):')
-    print(sfs1.k_feature_idx_)
-    print('CV Score:')
-    print(sfs1.k_score_)
+    # sfs1 = SFS  (knn,
+    #            k_features=3,
+    #            forward=False,
+    #            floating=False,
+    #            verbose=2,
+    #            scoring='recall',
+    #            cv=10,
+    #            skip_if_stuck=True,
+    #            n_jobs=-1,
+    #            )
     #
-    print(pd.DataFrame.from_dict(sfs1.get_metric_dict()).T)
+    # sfs1.fit(X_train, y_train)
+
+    knn.fit(X_train, y_train)
+
+
+    # print('\nSequential Forward Selection (k=3):')
+    # print(sfs1.k_feature_idx_)
+    # print('CV Score:')
+    # print(sfs1.k_score_)
+    # #
+    # print(pd.DataFrame.from_dict(sfs1.get_metric_dict()).T)
 
     # ig1 = plot_sfs(sfs1.get_metric_dict(), kind='std_dev')
     #
@@ -530,7 +536,7 @@ def knearestClassifier(data):
 
 
 
-    print('Selected features:', sfs1.k_feature_idx_)
+    # print('Selected features:', sfs1.k_feature_idx_)
     #
     # fig = plot_sfs(sfs1.get_metric_dict(), kind='std_err')
     #
@@ -542,30 +548,28 @@ def knearestClassifier(data):
 
     # exit(0)
 
-    # mse = mean_squared_error(y_test, knn.predict(X_test))
-    # print("MSE: %.6f" % mse)
+    mse = mean_squared_error(y_test, knn.predict(X_test))
+    print("MSE: %.6f" % mse)
 
-    # predictions = knn.predict(X_test)
+    predictions = knn.predict(X_test)
     #
     #
-    # X_test = pd.DataFrame(X_test)
-    # X_test['prediction'] = predictions
-    # X_test['Actuals'] = y_test
-    #
+    X_test = pd.DataFrame(X_test)
+    X_test['prediction'] = predictions
+    X_test['Actuals'] = y_test
+
     # tocsv(X_test,'predictions_KNeighborsClassifier.csv')
     #
-    # # predictions = knn.predict(X_validation)
-    # print(accuracy_score(y_test, predictions))
-    # print(confusion_matrix(y_test, predictions))
-    # print(classification_report(y_test, predictions))
+
+    print(accuracy_score(y_test, predictions))
+    print(confusion_matrix(y_test, predictions))
+    print(classification_report(y_test, predictions))
 
 
 
     import nDCG
-    # ndcgScore = nDCG.nDCG(float(y_result),float(y_test),[1])
-    # ndcgScore = validation.ndcg_score(y_test, y_result)
-    # print("ndcg: %.6f" % ndcgScore)
 
+    nDCG.ndcg(X_test)
 
     # yr = y_result.tolist()
     # yt = y_test.tolist()

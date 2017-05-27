@@ -69,7 +69,7 @@ import nDCG
 # data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
 data = pd.read_csv('../../../Data/data.csv')
 # data = pd.DataFrame(data)
-data = data.sample(10000)
+data = data.sample(1000)
 
 # pprint(data.head())
 
@@ -77,9 +77,9 @@ data = data.sample(10000)
 
 
 # pprint(srch_id_groups.head())
-# nDCG.ndcg(data)
+nDCG.ndcg(data)
 
-# exit(0)
+exit(0)
 
 data = algorithms.pre_process(data)
 
@@ -95,6 +95,7 @@ data = algorithms.pre_process(data)
 # algorithms.pipeline_anova(data)
 # algorithms.randomForst_to_ndcg(data)
 #
+# algorithms.compare_classifiers(data)
 # algorithms.gradientBoosting(data)
 
 algorithms.knearestClassifier(data)
