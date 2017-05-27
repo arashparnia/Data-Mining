@@ -1,6 +1,9 @@
+from pandas import scatter_matrix
 from pandas.io.parsers import read_csv
 from rpy2.robjects import r, pandas2ri
-from sklearn import preprocessing
+from sklearn import preprocessing, model_selection
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
@@ -19,6 +22,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sklearn.cluster as cluster
 import time
+
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+
 import validation
 # interactive(True)
 
@@ -57,10 +66,10 @@ import nDCG
 
 
 
-data = pd.read_csv('../../../Data/data.csv',nrows = 100)
-# data = pd.read_csv('../../../Data/data.csv')
+# data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
+data = pd.read_csv('../../../Data/data.csv')
 # data = pd.DataFrame(data)
-# data = data.sample(100)
+data = data.sample(10000)
 
 # pprint(data.head())
 
@@ -68,15 +77,20 @@ data = pd.read_csv('../../../Data/data.csv',nrows = 100)
 
 
 # pprint(srch_id_groups.head())
-data = nDCG.ndcg(data)
+# nDCG.ndcg(data)
 
-exit(0)
+# exit(0)
 
 data = algorithms.pre_process(data)
 
 
+# scatter_matrix(data)
+# plt.show()
+#
+# exit(0)
+# algorithms.forest_of_trees(data)
 
-# 2l22111gorithms.feature_importance(data)
+# algorithms.feature_importance(data)
 # algorithms.featureselection(data)
 # algorithms.pipeline_anova(data)
 # algorithms.randomForst_to_ndcg(data)
@@ -84,6 +98,7 @@ data = algorithms.pre_process(data)
 # algorithms.gradientBoosting(data)
 
 algorithms.knearestClassifier(data)
+# algorithms.decisiontreeClassifier(data)
 
 # data = pd.read_csv('../../../Data/datacsv_Pclass2.csv')
 # algorithms.randomForst_to_ndcg(data)
@@ -101,7 +116,7 @@ algorithms.knearestClassifier(data)
 # data = pd.read_csv('../../../Data/datacsv_Pclass6.csv')
 # algorithms.randomForst_to_ndcg(data)
 
-exit(0)
+
 
 
 

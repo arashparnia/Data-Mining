@@ -16,25 +16,27 @@ def dcg(data):
     data['dcg_index'].apply(log2)
     data['dcg_score'] = data['dcg_score'] / data['dcg_index']
     # data['dcg_score'] = data['dcg_score'] / log2((float(data.index + 1)))  # log2(data.index)
-    # pprint( data)
-    max_dcg = max(data['dcg_score'])
-    return ('max dcg =', max_dcg)
+    # # pprint( data)
+    # max_dcg = max(data['dcg_score'])
+    # return ('max dcg =', max_dcg)
 
 def ndcg(data,g = 'srch_id'):
-
-    newdata = pd.DataFrame()
     srch_id_groups = data.groupby(g)
-
-    dfs =[]
-    ndcg_scores = list()
+    # dfs =[]
+    sum_dcg_score_per_group = list()
+    max_dcg_score_per_group =list()
     for name, group in srch_id_groups:
-        max_dcg = dcg(group)
+        dcg(group)
+        max_dcg = max(group['dcg_score'])
         sum_dcg = sum(group['dcg_score'])
-        ndcg_scores.append(sum_dcg/max_dcg)
-        dfs.append(group)
-    data = pd.concat(dfs)
-    pprint(max(data['dcg_score']))
-    return data
+        sum_dcg_score_per_group.append(sum_dcg)
+        max_dcg_score_per_group.append(max_dcg)
+        # dfs.append(group)
+    # data = pd.concat(dfs)
+    average_dcg_all_groups = np.average(sum_dcg_score_per_group)
+    ndcg_score = max_dcg_score_per_group/average_dcg_all_groups
+    pprint(ndcg_score)
+
 
 
 
