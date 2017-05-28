@@ -357,11 +357,11 @@ def randomForstClassifier(data):
 
     x = data[labels]
 
-    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=42)
     # pprint(X_test)
 
     print("random forest")
-    rf = RandomForestClassifier(n_jobs=-1, class_weight='auto' , max_depth=200,verbose=1 )
+    rf = RandomForestClassifier(n_jobs=-1, class_weight='auto' , max_depth=400,verbose=1 )
 
     rf.fit(X_train, y_train)
 
@@ -455,7 +455,7 @@ def knearestClassifier(data):
     # pprint(X_train)
     print("KNeighborsClassifier")
 
-    knn = KNeighborsClassifier(n_jobs=-1,algorithm='auto',n_neighbors=1,weights='distance',leaf_size=30)
+    knn = KNeighborsClassifier(n_jobs=-1,algorithm='auto',n_neighbors=5,weights='distance',leaf_size=400)
 
     # sfs1 = SFS  (knn,
     #            k_features=3,
@@ -558,20 +558,20 @@ def decisiontreeClassifier(data):
         'prop_location_score2',
         # 'position',
         'price_usd',
-        'promotion_flag',
+        # 'promotion_flag',
         # 'srch_saturday_night_bool',
         # 'random_bool',
         # 'click_bool',
         # 'booking_bool',
         # 'price_usd_normalized',
         # 'consumer',
-        'Pclass',
+        # 'Pclass',
         # 'score'
         # 'dcg_score'
     ]
 
 
-    y = (data['booking_bool'])
+    y = (data['score'])
 
     x = data[labels]
 
@@ -629,14 +629,15 @@ def decisiontreeClassifier(data):
 
     # mse = mean_squared_error(y_test, knn.predict(X_test))
     # print("MSE: %.6f" % mse)
-
     predictions = dtc.predict(X_test)
+    results = pd.DataFrame({'srch_id': X_test['srch_id'], 'prop_id': X_test['prop_id'], 'score': predictions})
 
-    X_test = pd.DataFrame(X_test)
-    X_test['prediction'] = predictions
-    X_test['Actuals'] = y_test
+    f = lambda x: x.sort('score', ascending=False)
+    ranked = results.groupby('srch_id', sort=False).apply(f)
+    ranked.reset_index(0, drop=True)
 
-    tocsv(X_test,'predictions_DecisionTreeClassifier.csv')
+    tocsv(ranked, 'predictions_DecisionTreeClassifier.csv')
+
 
     # predictions = knn.predict(X_validation)
     print(accuracy_score(y_test, predictions))
@@ -672,25 +673,26 @@ def decisiontreeClassifier(data):
     # plt.show()
 def gradientBoosting(data):
     labels = [
-        # 'srch_id',
+        'srch_id',
         # 'site_id',
-        # 'prop_id',
+        'prop_id',
         # 'prop_starrating',
-        'prop_review_score',
-        'prop_brand_bool',
+        # 'prop_review_score',
+        # 'prop_brand_bool',
         'prop_location_score1',
         'prop_location_score2',
         # 'position',
         'price_usd',
-        'promotion_flag',
-        'srch_saturday_night_bool'
+        # 'promotion_flag',
+        # 'srch_saturday_night_bool',
         # 'random_bool',
         # 'click_bool',
         # 'booking_bool',
         # 'price_usd_normalized',
-        # 'consumer'
-        # 'Pclass'
+        # 'consumer',
+        # 'Pclass',
         # 'score'
+        # 'dcg_score'
     ]
 
     y = (data['score'])
@@ -704,7 +706,7 @@ def gradientBoosting(data):
 
 
     params = {'n_estimators': 500, 'max_depth': 4, 'min_samples_split': 2,
-              'learning_rate': 0.01, 'loss': 'ls',}
+              'learning_rate': 0.01, 'loss': 'ls','verbose' : 2}
     # params = {'max_depth': 2000, 'learning_rate': 0.01, 'loss': 'huber'}
     clf = ensemble.GradientBoostingRegressor(**params)
 
@@ -712,10 +714,20 @@ def gradientBoosting(data):
     mse = mean_squared_error(y_test, clf.predict(X_test))
     print("MSE: %.6f" % mse)
 
-    y_result = clf.predict(X_test)
+    predictions = clf.predict(X_test)
 
-    ndcgScore = validation.ndcg_score(y_test, y_result)
-    print("ndcg: %.6f" % ndcgScore)
+    results = pd.DataFrame({'srch_id': X_test['srch_id'], 'prop_id': X_test['prop_id'], 'score': predictions})
+
+    f = lambda x: x.sort('score', ascending=False)
+    ranked = results.groupby('srch_id', sort=False).apply(f)
+    ranked.reset_index(0, drop=True)
+
+    tocsv(ranked, 'predictions_DecisionTreeClassifier.csv')
+
+    # predictions = knn.predict(X_validation)
+    print(accuracy_score(y_test, predictions))
+    print(confusion_matrix(y_test, predictions))
+    print(classification_report(y_test, predictions))
 
 
     feature_importance = clf.feature_importances_

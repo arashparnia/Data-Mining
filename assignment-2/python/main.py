@@ -66,13 +66,18 @@ data = algorithms.pre_process(data)
 # algorithms.feature_importance(data)
 # algorithms.featureselection(data)
 # algorithms.pipeline_anova(data)
-algorithms.randomForstClassifier(data)
-#
-# algorithms.compare_classifiers(data)
-# algorithms.gradientBoosting(data)
 
+
+# algorithms.randomForstClassifier(data)
 # algorithms.knearestClassifier(data)
 # algorithms.decisiontreeClassifier(data)
+algorithms.gradientBoosting(data)
+
+
+# algorithms.compare_classifiers(data)
+
+
+
 
 # data = pd.read_csv('../../../Data/datacsv_Pclass2.csv')
 # algorithms.randomForst_to_ndcg(data)
