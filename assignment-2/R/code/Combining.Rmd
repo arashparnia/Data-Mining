@@ -1,0 +1,41 @@
+---
+title: "Combination models"
+output: html_notebook
+---
+
+# Remove Workspace
+```{r}
+rm(list=ls())
+```
+
+# Load relevant data
+```{r}
+ load('P_C_Predictions_v0.2.RData')
+load('LOGP1C2.RData')
+P1C2<- log_regr1
+load('LOGP2C3.RData')
+P2C3<- log_regr1
+load('LOGP6C2.RData')
+P6C2<- log_regr1
+load('LOGP6C3.RData')
+P6C3<- log_regr1
+load('LOGP6C4.RData')
+P6C4<- log_regr1
+rm(log_regr1)
+```
+
+
+```{r}
+total <- rbind.fill(Prediction_1_1,  Prediction_1_2, Prediction_1_3,P1C2,  
+                    Prediction_2_1, Prediction_2_2,P2C3,  Prediction_2_4, 
+                    Prediction_3_1,Prediction_3_2,  Prediction_3_3, Prediction_3_4,
+                    Prediction_4_1,  Prediction_4_2, Prediction_4_3,Prediction_4_4,  
+                    Prediction_5_1, Prediction_5_2,Prediction_5_3,  Prediction_5_4, 
+                    P6C4,Prediction_6_2,  P6C3, P6C2)
+
+total <- total[ ,1:2]
+print(nrow(total))
+```
+```{r}
+write.csv(total, file = "019.csv", row.names=FALSE)
+```
