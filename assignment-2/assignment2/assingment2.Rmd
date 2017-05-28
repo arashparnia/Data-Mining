@@ -285,6 +285,73 @@ summary(fit) # display the best model
 ```
 
 
+```{r}
+install.packages("data.table")
+library(data.table)
+install.packages("fastmatch")
+library("fastmatch")
+install.packages("microbenchmark")
+library('microbenchmark')
+```
+
+```{r}
+
+# DData <- read.csv("../../../Data/data.csv", header= TRUE)
+DData <- fread(file = "../../../Data/data.csv", select = c("srch_id","click_bool","booking_bool","prop_id"))
+```
+
+```{r}
+predictions <- fread("../../../Data/predictions_KNeighborsClassifier.csv", header= TRUE)
+# predictions <- read.csv("../../../Data/predictions_RandomForestClassifier.csv", header= TRUE)
+```
+
+
+```{r}
+ranked = data.frame(predictions$srch_id,predictions$prop_id,predictions$score)
+
+names(ranked)[1] <- "srch_id"
+names(ranked)[2] <- "prop_id"
+names(ranked)[3] <- "score"
+```
+
+# Calculation /log2
+```{r}
+# Subset Data
+srch_idP <- unique(ranked[,1])
+srch_DD <- unique(DData[,1])
+
+out1<- ranked
+out2 <- subset(DData,  DData$srch_id %in% srch_idP)
+
+out <- merge(out1,out2 , by=c('srch_id','prop_id'))
+out<-out[order(out[,1], -out[,3]),]
+
+
+# Calculate basic score 
+out$scored <- out[,4] + 4* out[,5]
+out$click_bool <- NULL
+out$booking_bool <- NULL
+
+# Set up Position
+out$position <- ave(out$srch_id, out$srch_id, FUN = seq_along)
+
+# Calculate discounted score
+out$Dscore <- (2^out$score - 1)/ log2(out$position + 1)
+sums <- aggregate(out$Dscore, by=list(out$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate max score possible
+out_max <- out[order(out$srch_id, -out$scored),]
+out_max$position <- ave(out_max$srch_id, out_max$srch_id, FUN = seq_along)
+out_max$Dscore <-  (2^out_max$score - 1)/ log2(out_max$position + 1)
+sums_max <- aggregate(out_max$Dscore, by=list(out_max$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate NDCG
+a<- sums/ sums_max
+a<- a[2:nrow(a),]
+NDCG <- sum(a[,2])/nrow(sums)
+```
+
+
 
 
 

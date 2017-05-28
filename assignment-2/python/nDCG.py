@@ -29,12 +29,14 @@ def ndcg(data,g = 'srch_id'):
         dcg(group)
         max_dcg = max(group['dcg_score'])
         sum_dcg = sum(group['dcg_score'])
-        sum_dcg_score_per_group.append(sum_dcg)
-        max_dcg_score_per_group.append(max_dcg)
+        # sum_dcg_score_per_group.append(sum_dcg)
+        # max_dcg_score_per_group.append(max_dcg)
+        # ndcg_scores =
         # dfs.append(group)
     # data = pd.concat(dfs)
     average_dcg_all_groups = np.average(sum_dcg_score_per_group)
     ndcg_scores = max_dcg_score_per_group/average_dcg_all_groups
+    pprint(ndcg_scores)
     ndcg_score = np.average(ndcg_scores)
     pprint(ndcg_score)
 

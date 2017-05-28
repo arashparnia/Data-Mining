@@ -35,53 +35,26 @@ import algorithms
 import nDCG
 
 
-# result for k nearest pclass2
-
-# [2017-05-18 22:34:06] Features: 1/1 -- score: 0.95720270577Sequential Forward Selection (k=3):
-# (0,)
-# CV Score:
-# 0.95720270577
-#   avg_score     ci_bound                                          cv_scores  \
-# 1  0.957203  0.000235988  [0.956929193487, 0.957102157803, 0.95719278311...
-# 2  0.957203  0.000235988  [0.956929193487, 0.957102157803, 0.95719278311...
-# 3  0.957203  0.000235988  [0.956929193487, 0.957102157803, 0.95719278311...
-# 4  0.957203  0.000235988  [0.956929193487, 0.957102157803, 0.95719278311...
-# 5  0.957203  0.000235988  [0.956929193487, 0.957102157803, 0.95719278311...
-# 6  0.957187  0.000244217  [0.95690337682, 0.95708494358, 0.957184175189,...
-# 7  0.955863  0.000256905  [0.955578121235, 0.95578526979, 0.955772475295...
-# 8  0.948008  0.000192621  [0.947936387732, 0.947840906157, 0.94801673380...
-# 9  0.947336  0.000627397  [0.946370176586, 0.947531050154, 0.94749165031...
-#
-#                    feature_idx      std_dev      std_err
-# 1                         (0,)  0.000183607  9.18033e-05
-# 2                       (0, 1)  0.000183607  9.18033e-05
-# 3                    (0, 1, 2)  0.000183607  9.18033e-05
-# 4                 (0, 1, 2, 6)  0.000183607  9.18033e-05
-# 5              (0, 1, 2, 6, 7)  0.000183607  9.18033e-05
-# 6           (0, 1, 2, 6, 7, 8)  0.000190009  9.50046e-05
-# 7        (0, 1, 2, 3, 6, 7, 8)  0.000199881  9.99405e-05
-# 8     (0, 1, 2, 3, 5, 6, 7, 8)  0.000149866  7.49329e-05
-# 9  (0, 1, 2, 3, 4, 5, 6, 7, 8)  0.000488136  0.000244068
-
 
 
 
 # data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
 data = pd.read_csv('../../../Data/data.csv')
 # data = pd.DataFrame(data)
-data = data.sample(1000)
+# data = data.sample(10000)
 
 # pprint(data.head())
 
-
-
+# testdata = pd.read_csv('../../../Data/TESTdatacsv.csv')
+# testdata = testdata.sample(1)
 
 # pprint(srch_id_groups.head())
-nDCG.ndcg(data)
-
-exit(0)
+# nDCG.ndcg(data)
+#
+# exit(0)
 
 data = algorithms.pre_process(data)
+# testdata = algorithms.pre_process(testdata)
 
 
 # scatter_matrix(data)
@@ -93,12 +66,12 @@ data = algorithms.pre_process(data)
 # algorithms.feature_importance(data)
 # algorithms.featureselection(data)
 # algorithms.pipeline_anova(data)
-# algorithms.randomForst_to_ndcg(data)
+algorithms.randomForstClassifier(data)
 #
 # algorithms.compare_classifiers(data)
 # algorithms.gradientBoosting(data)
 
-algorithms.knearestClassifier(data)
+# algorithms.knearestClassifier(data)
 # algorithms.decisiontreeClassifier(data)
 
 # data = pd.read_csv('../../../Data/datacsv_Pclass2.csv')
@@ -246,3 +219,4 @@ algorithms.knearestClassifier(data)
 # frame.axes.get_xaxis().set_visible(False)
 # frame.axes.get_yaxis().set_visible(False)
 # plt.show()
+print('done')
