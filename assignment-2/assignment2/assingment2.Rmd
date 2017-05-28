@@ -301,8 +301,9 @@ DData <- fread(file = "../../../Data/data.csv", select = c("srch_id","click_bool
 ```
 
 ```{r}
-predictions <- fread("../../../Data/predictions_KNeighborsClassifier.csv", header= TRUE)
-# predictions <- read.csv("../../../Data/predictions_RandomForestClassifier.csv", header= TRUE)
+# predictions <- fread("../../../Data/predictions_KNeighborsClassifier.csv", header= TRUE)
+# predictions <- fread("../../../Data/predictions_RandomForestClassifier.csv", header= TRUE)
+predictions <- fread("../../../Data/predictions_DecisionTreeClassifier.csv", header= TRUE)
 ```
 
 
@@ -313,6 +314,58 @@ names(ranked)[1] <- "srch_id"
 names(ranked)[2] <- "prop_id"
 names(ranked)[3] <- "score"
 ```
+
+
+
+# calculation prof [he just explained a simple version]
+```{r}
+# Subset Data
+srch_idP <- unique(ranked[,1])
+out <- subset(DData, srch_id %in% srch_idP)
+
+# Calculate basic score 
+out$scored <- out[,2] +4* out[,3]
+
+# Set up Position
+out$position <- ave(out$srch_id, out$srch_id, FUN = seq_along)
+
+# Calculate discounted score
+out$Dscore <- out$scored / (out$position)
+
+# Delete variables
+out$click_bool <- NULL
+out$booking_bool <- NULL
+
+# Calculate discounted score
+out$Dscore <- (2^out$score - 1)/ log2(out$position + 1)
+sums <- aggregate(out$Dscore, by=list(out$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate max score possible
+out_max <- out[order(out$srch_id, -out$scored),]
+out_max$position <- ave(out_max$srch_id, out_max$srch_id, FUN = seq_along)
+out_max$Dscore <-  (2^out_max$score - 1)/ log2(out_max$position + 1)
+sums_max <- aggregate(out_max$Dscore, by=list(out_max$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate NDCG
+a<- sums/ sums_max
+NDCG <- sum(a[,2])/nrow(sums)
+NDCG
+```
+Random forest nDCG 0.3494453
+K-Neighbors nDCG 0.3494571
+Decision Tree 0.3494571
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Calculation /log2
 ```{r}
@@ -349,9 +402,6 @@ sums_max <- aggregate(out_max$Dscore, by=list(out_max$srch_id), FUN= sum)  # Sum
 a<- sums/ sums_max
 a<- a[2:nrow(a),]
 NDCG <- sum(a[,2])/nrow(sums)
+NDCG
 ```
-
-
-
-
 

@@ -39,30 +39,30 @@ centers = [[1, 1], [-1, -1], [1, -1]]
 # y = iris.target
 
 import pandas as pd
-data = pd.read_csv('../../../Data/datacsv_Pclass1.csv')
+data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
 data = data.apply(lambda x: pd.factorize(x)[0])
 
 y = (data['score'])
 
 X = data[[
-    'srch_id',
-    'site_id',
-    'prop_id',
-    'prop_starrating',
-    'prop_review_score',
-    'prop_brand_bool',
+    # 'srch_id',
+    # 'site_id',
+    # 'prop_id',
+    # 'prop_starrating',
+    # 'prop_review_score',
+    # 'prop_brand_bool',
     'prop_location_score1',
     'prop_location_score2',
     # 'position',
     'price_usd',
-    'promotion_flag',
-    'srch_saturday_night_bool',
+    # 'promotion_flag',
+    # 'srch_saturday_night_bool',
     # 'random_bool',
     # 'click_bool',
     # 'booking_bool',
     # 'price_usd_normalized',
-    'consumer',
-    'Pclass'
+    # 'consumer',
+    # 'Pclass'
     # 'score'
 ]]
 

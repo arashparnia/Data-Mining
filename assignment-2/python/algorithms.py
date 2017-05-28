@@ -1,3 +1,4 @@
+import os
 from pprint import pprint
 
 from sklearn import ensemble, preprocessing
@@ -23,7 +24,9 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.datasets import make_classification
 from sklearn.ensemble import ExtraTreesClassifier
-
+from sklearn.tree import export_graphviz
+from subprocess import check_call
+from treeinterpreter import treeinterpreter as ti
 import numpy as np
 
 from sklearn.svm import SVC
@@ -361,11 +364,45 @@ def randomForstClassifier(data):
     # pprint(X_test)
 
     print("random forest")
-    rf = RandomForestClassifier(n_jobs=-1, class_weight='auto' , max_depth=400,verbose=1 )
+    rf = RandomForestClassifier(n_jobs=-1, class_weight='auto' , n_estimators=1000,max_depth=400,verbose=0 )
 
     rf.fit(X_train, y_train)
 
-    # mse = mean_squared_error(y_test, rf.predict(X_test))
+    predictions  = rf.predict(X_test)
+
+    print('accuracy_score ',accuracy_score(y_test, predictions))
+    print('confusion_matrix ', confusion_matrix(y_test, predictions))
+    print('classification_report' , classification_report(y_test, predictions))
+
+    prediction, bias, contributions = ti.predict(rf, X_test)
+    print ("Prediction", prediction)
+    print ("Bias (trainset prior)", bias)
+    print ("Feature contributions:")
+    for c, feature in zip(contributions[0],
+                          labels):
+        print (feature, c)
+
+    # from sklearn import tree
+    # i_tree = 0
+    # for tree_in_forest in rf.estimators_:
+    #     with open('tree_' + str(i_tree) + '.dot', 'w') as my_file:
+    #         my_file = tree.export_graphviz(tree_in_forest, out_file=my_file)
+    #     i_tree = i_tree + 1
+
+    # check_call(['dot', '-Tpng', 'tree.dot', '-o', 'tree.png'])
+
+    # results = pd.DataFrame({'srch_id': X_test['srch_id'], 'prop_id': X_test['prop_id'], 'score': predictions})
+    #
+    # f = lambda x: x.sort('score', ascending=False)
+    # ranked = results.groupby('srch_id', sort=False).apply(f)
+    # ranked.reset_index(0, drop=True)
+    #
+    # # results.groupby('srch_id').sort('score')
+    #
+    # tocsv(ranked, 'predictions_RandomForestClassifier.csv')
+    #
+
+    # mse = mean_squared_error(y_test, predictions)
     # print("MSE: %.6f" % mse)
 
     # print("cross validation")
@@ -373,30 +410,11 @@ def randomForstClassifier(data):
     # print(scores)
     # print( np.mean(cross_val_score(rf, X_train, y_train, cv=10)))
 
-    predictions = rf.predict(X_test)
-    # pprint(predictions)
 
-
-    # results['Actuals'] = y_test
-    results = pd.DataFrame({'srch_id': X_test['srch_id'], 'prop_id': X_test['prop_id'], 'score': predictions})
-
-    f = lambda x: x.sort('score', ascending=False)
-    ranked = results.groupby('srch_id', sort=False).apply(f)
-    ranked.reset_index(0, drop=True)
-
-    # results.groupby('srch_id').sort('score')
-
-    tocsv(ranked, 'predictions_RandomForestClassifier.csv')
-    #
-
-
-    # ndcgScore = validation.ndcg_score(y_test, y_result)
-    # print("ndcg: %.6f" % ndcgScore)
 
     # feature_importance = rf.feature_importances_
-    # make importances relative to max importance
     # feature_importance = 100.0 * (feature_importance / feature_importance.max())
-
+    #
     # sorted_idx = pd.np.argsort(feature_importance)
     # pos = pd.np.arange(sorted_idx.shape[0]) + .5
     # plt.subplot(1, 2, 2)
@@ -406,15 +424,6 @@ def randomForstClassifier(data):
     # plt.title('Variable Importance')
     # plt.tight_layout()
     # plt.show()
-
-    # yyr = pd.DataFrame(y_result)
-    # yyt = pd.DataFrame(y_test)
-
-    # print(yyr)
-    # print(yyt)
-
-
-
 
 
 
@@ -698,7 +707,7 @@ def gradientBoosting(data):
     y = (data['score'])
 
     x = data[labels]
-    x = StandardScaler().fit_transform(x)
+    # x = StandardScaler().fit_transform(x)
 
     X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.4, random_state=0)
 
@@ -711,8 +720,8 @@ def gradientBoosting(data):
     clf = ensemble.GradientBoostingRegressor(**params)
 
     clf.fit(X_train, y_train)
-    mse = mean_squared_error(y_test, clf.predict(X_test))
-    print("MSE: %.6f" % mse)
+    # mse = mean_squared_error(y_test, clf.predict(X_test))
+    # print("MSE: %.6f" % mse)
 
     predictions = clf.predict(X_test)
 
@@ -722,26 +731,25 @@ def gradientBoosting(data):
     ranked = results.groupby('srch_id', sort=False).apply(f)
     ranked.reset_index(0, drop=True)
 
-    tocsv(ranked, 'predictions_DecisionTreeClassifier.csv')
+    tocsv(ranked, 'predictions_GradientBoostingRegressor.csv')
 
-    # predictions = knn.predict(X_validation)
-    print(accuracy_score(y_test, predictions))
-    print(confusion_matrix(y_test, predictions))
-    print(classification_report(y_test, predictions))
+    # print(accuracy_score(y_test, predictions))
+    # print(confusion_matrix(y_test, predictions))
+    # print(classification_report(y_test, predictions))
 
 
-    feature_importance = clf.feature_importances_
-    # make importances relative to max importance
-    feature_importance = 100.0 * (feature_importance / feature_importance.max())
-
-    sorted_idx = pd.np.argsort(feature_importance)
-    pos = pd.np.arange(sorted_idx.shape[0]) + .5
-    plt.subplot(1, 2, 2)
-    plt.barh(pos, feature_importance[sorted_idx], align='center')
-    plt.yticks(pos, labels)
-    plt.xlabel('Relative Importance')
-    plt.title('Variable Importance')
-    plt.show()
+    # feature_importance = clf.feature_importances_
+    # # make importances relative to max importance
+    # feature_importance = 100.0 * (feature_importance / feature_importance.max())
+    #
+    # sorted_idx = pd.np.argsort(feature_importance)
+    # pos = pd.np.arange(sorted_idx.shape[0]) + .5
+    # plt.subplot(1, 2, 2)
+    # plt.barh(pos, feature_importance[sorted_idx], align='center')
+    # plt.yticks(pos, labels)
+    # plt.xlabel('Relative Importance')
+    # plt.title('Variable Importance')
+    # plt.show()
 
 
 

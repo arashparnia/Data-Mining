@@ -38,10 +38,10 @@ import nDCG
 
 
 
-# data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
-data = pd.read_csv('../../../Data/data.csv')
+data = pd.read_csv('../../../Data/data.csv',nrows = 1000)
+# data = pd.read_csv('../../../Data/data.csv')
 # data = pd.DataFrame(data)
-# data = data.sample(10000)
+# data = data.sample(100000)
 
 # pprint(data.head())
 
@@ -68,10 +68,10 @@ data = algorithms.pre_process(data)
 # algorithms.pipeline_anova(data)
 
 
-# algorithms.randomForstClassifier(data)
+algorithms.randomForstClassifier(data)
 # algorithms.knearestClassifier(data)
 # algorithms.decisiontreeClassifier(data)
-algorithms.gradientBoosting(data)
+# algorithms.gradientBoosting(data)
 
 
 # algorithms.compare_classifiers(data)
