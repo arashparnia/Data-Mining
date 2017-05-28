@@ -1,0 +1,402 @@
+---
+title: "Assignment 2"
+output: html_notebook
+---
+
+
+```{r}
+# Data loading
+rm(list=ls())
+rm(list = ls())
+```
+
+# Load libraries
+```{r}
+library("ggplot2")
+# install.packages("nortest")
+library(nortest)
+# install.packages("mvoutlier")
+library(mvoutlier)
+# install.packages("doBy")
+library(doBy)
+  # install.packages("anytime")
+library(anytime)
+  # install.packages("rpart")
+library("rpart")
+```
+
+# Load rawdata set
+```{r}
+WD <- setwd("C:\\Users\\Piet\\Test\\Data-Mining\\assignment-2\\assignment2")
+load("rawdata_environment.RData")
+```
+# OR load from data set and save to r object
+```{r}
+# rawdata <- read.csv("../../../Data/training_set_VU_DM_2014.csv", header= TRUE)
+# save.image("rawdata_environment.RData")
+```
+# Test
+```{r}
+# rawdata = rawdata[1:200000,]
+```
+
+# Split data into normal data and competitor data
+```{r}
+columns <- c(28:51)
+data <- subset(rawdata, select = -columns )
+data_comp <- subset(rawdata, select = columns)
+str(data)
+```
+
+# Split data into class: factors and integers
+```{r}
+columns <- c(2,5,6,10,12:14,16,25,26,29)
+data.integers  <- subset(data, select = -columns )
+data.factors   <- subset(data, select = columns)
+# data.factors_totransform <-subset(data.factors, select = c(3,6:11))         # Delete variable srch_id
+datetime <- subset(data, select = c(2))
+```
+
+# Test if the factor data follows a normal distibution
+```{r}
+for (i in 2:11){                              # Does not work due to NA (instead of NULL)
+  vector <- as.matrix(data.factors[i])
+  vector <- vector[!vector %in% "NULL"]
+  vector <-as.numeric(vector)
+  print(names(data.factors[i]))
+  print(ad.test(vector))
+}
+```
+# Test if the integer data follows a normal distibution
+```{r}
+for (i in 2:11){
+  vector <- as.matrix(data.factors[i])
+  vector <- vector[!vector %in% "NULL"]
+  vector <-as.numeric(vector)
+  print(names(data.integers[i]))
+  print(ad.test(vector))
+}
+```
+
+# Transform specific factors into numerics
+```{r}
+for (i in 1:11){
+    data.factors[,i] <- as.numeric(as.character(data.factors[ ,i]))
+}
+for (i in 1:8){
+data_comp[ , 3*i] <- as.numeric(as.character(data_comp[ ,3*i]))
+}
+```
+
+
+# Transform Date time
+```{r}
+data$date_time <-  anytime(as.factor(data$date_time))
+data$year <- as.numeric(format(data$date_time,'%Y'))
+data$month <- as.numeric(format(data$date_time,'%m'))
+data$date_time <- data$year + (data$month / 12)
+# 
+```
+
+# Put in transformed factors back
+#### FACTOR TO REMOVE 7 <- 11
+```{r}
+data[ , c(5,6,10,12,13,14,16,25,26,29)] <- data.factors[ ,2:11]
+```
+3
+
+# Delete unnecessary columns or values
+```{r}
+data$year <- NULL
+data$month <- NULL
+rm(columns, rawdata, datetime, data.factors_totransform)
+```
+
+# Missing values ----------------------------------------------------------------------------------------------------------------
+
+```{r}
+##############################
+# Replacing missing observations of the variable prop_location_score2 by the mean
+##############################
+data$prop_location_score2[is.na(data$prop_location_score2)]<-mean(data$prop_location_score2[(!is.na(data$prop_location_score2))])
+##############################
+# Replace missing values of prop review score with the lowest rating value i.e. 1
+##############################
+data$prop_review_score[is.na(data$prop_review_score)] <- 1
+##############################
+# ANOVA regression classification for the prop_starrating
+##############################
+ANOVA_Sample<-cbind(data$prop_review_score,data$price_usd,data$prop_starrating)
+ANOVA_Sample<-data.frame(ANOVA_Sample)
+colnames(ANOVA_Sample)<-c("prop_review_score","price_usd","prop_starrating")
+starFIT <- rpart(prop_starrating ~ prop_review_score+price_usd,data = ANOVA_Sample[ANOVA_Sample$prop_starrating!=0,], method = "anova")
+
+ANOVA_Sample$prop_starrating[ANOVA_Sample$prop_starrating==0] <- round(predict(starFIT,data=data.frame(ANOVA_Sample[ANOVA_Sample$prop_starrating==0,],)))
+#replace ald starrating varaible with the new predicted one
+data$prop_starrating<-ANOVA_Sample$prop_starrating
+           
+```
+# Remove unnecessary data
+```{r}
+rm(ANOVA_Sample, i, starFIT)
+```
+
+# Testing for outliers------------------------------------------------------------------------------------------------------------------
+
+# Summarize all variables
+```{r}
+for (i in 2:11){
+  name=names(data.factors[i])
+  vector <- as.matrix(data.factors[i])
+  vector <- vector[!vector %in% "NULL"]
+  vector <-as.numeric(vector)
+  print(names(data.factors[i]))
+  print(summary(vector))
+}
+s <- summary(data.integers)
+```
+
+
+
+
+# Reduce Variabels to be test
+```{r}
+NewData=      data[ , c(6,14,16,19,26)]
+NewData_comp= data_comp[ , c(3,6,9,12,15,18,21,24)]
+```
+
+# Set-up box plotting
+```{r}
+compadata <- list()
+for (i in 1:8){
+  NewData_compa <- NewData_comp[,i][NewData_comp[ ,i]!="NULL"]
+  NewData_compa <- as.numeric(as.character(NewData_compa))
+  compadata[[i]] <- NewData_compa
+}
+```
+
+# Plot variables with potentially outliers
+```{r}
+boxplot(NewData$visitor_hist_adr_usd[!NewData$visitor_hist_adr_usd==7800])
+boxplot(NewData[ ,2])
+boxplot(NewData[ ,3])
+boxplot(NewData[ ,4])
+
+
+boxplot(compadata)
+boxplot(data[ ,6])          # positive skew, no ground to remove outliers.
+boxplot(data[ ,14])         # negative skew, transform zero's into 1.5 values.
+boxplot(data[ ,16])         # Extreme observations in uppertail, due to data errors
+                            # Transform values above 5000 into median price/ anova price
+boxplot(data[ ,19])         # Positive skew, no ground for erro's in data
+boxplot(data[ ,26])
+```
+# Remove unnecessary data
+```{r}
+rm(NewData, NewData_comp, NewData_compa, name, s,i, compadata, vector, data.factors,data.integers)
+```
+# Handling Outliers --------------------------------------------------------------------------------------------------------------------
+
+# Replace prices above 10000 into the median price
+```{r}
+median(data$price_usd)
+data$price_usd[data$price_usd>5000] <- median(data$price_usd)
+data$price_usd[data$price_usd>2000] <- 2000
+
+
+# https://stats.stackexchange.com/questions/70801/how-to-normalize-data-to-0-1-range
+# normalize prices
+prices_max <- aggregate(price_usd ~ srch_id, data = data, max)
+prices_min <- aggregate(price_usd ~ srch_id, data = data, min)
+
+data2 = merge(data$srch_id,prices_max,by.x=1,by.y=1)
+data3 = merge(data$srch_id,prices_min,by.x=1,by.y=1)
+
+prices_normalized <- (data$price_usd -data3[,2])/(data2[,2] - data3[,2])
+
+
+
+d <- data.frame(prices_normalized)
+d[is.na(d)] <- 0.5
+data$price_usd_normalized <- d
+```
+
+# place Outliers for percentage price difference with competitors
+```{r}
+a <- data_comp[ ,c(3,6,9,12,15,18,21,24)]
+a[a > 300] <- 300
+data_comp[ , c(3,6,9,12,15,18,21,24)] <- a
+
+rm(a,d,prices_max,prices_min,prices_normalized,data2)
+```
+
+
+
+
+
+# Create New variables  -----------------------------------------------------------------------------------------------------------
+
+# Creating Consumers class
+```{r}
+data$consumer <- "other"
+data$consumer[data$srch_adults_count == 1] <- "single"
+data$consumer[data$srch_adults_count == 2] <- "couple"
+data$consumer[data$srch_children_count == 2] <- "Parents"
+```
+
+# Creating Socio Economic class [BIG LOOP]
+```{r}
+Means <- aggregate(price_usd ~ srch_id, data = data, mean)
+Means[ ,2] <- findInterval(Means[,2], c(0,75, 100,150,200,500,10000))
+
+d <- data.frame(data[ ,c(1)])
+names(d) <- c("srch_id")
+a<- merge(d, Means, by="srch_id")
+data$Pclass <- a[,2]
+
+rm(a,d,Means)
+```
+# Creating Score variable 
+# Adjust score: Based on click and booking rates, adjusted for position by sigmoid function.
+# NOTE: [previous score was a simples function of position]
+```{r}
+position_score <- (1/(1+exp(-0.25*data$position)))
+data$score <- (data$click_bool + 5* data$booking_bool)* position_score
+
+hotelscores <- aggregate(score ~ prop_id, data = data, sum)
+hotelclicks <- aggregate(click_bool ~ prop_id, data=data, sum)
+hotelbooks <- aggregate(booking_bool ~ prop_id, data=data, sum)
+
+hist(log(hotelclicks[,2]), prob = TRUE)
+curve(dexp(x, rate = 2.5), col = 2, lty = 2, lwd = 2, add = TRUE)
+
+hist(log(hotelbooks[,2]), prob = TRUE)
+curve(dexp(x, rate = 2.5), col = 2, lty = 2, lwd = 2, add = TRUE)
+```
+
+
+
+
+
+
+# Data analysis: Tables -----------------------------------------------------------------------------------------------------------
+```{r}
+booked_prices <- subset(data$prices,data$booking_bool==1)
+# hist(booked_prices)
+
+table(data$booking_bool)[2] / table(data$booking_bool)[1]
+table(data$click_bool)[2] /table(data$click_bool)[1]
+
+```
+# remove al unnecessary data
+```{r}
+rm(hotelbooks, data3,hotelclicks,hotelscores,booked_prices)
+```
+# Create small data set
+```{r}
+REMOVALS<-c("visitor_hist_starrating","orig_destination_distance","visitor_hist_adr_usd","gross_bookings_usd","srch_query_affinity_score")
+
+data<-data[,!(colnames(data) %in% REMOVALS)]
+
+```
+
+# Split Data into Consumer types:
+```{r}
+Data_c<- split(data, data$consumer)
+
+Data_consumer1 <- as.data.frame(Data_c[1])
+Data_consumer2 <- as.data.frame(Data_c[2])
+Data_consumer3 <- as.data.frame(Data_c[3])
+Data_consumer4 <- as.data.frame(Data_c[4])
+
+names(Data_consumer1) <- names(Data_consumer2) <-names(Data_consumer3) <-names(Data_consumer4) <- c("srch_id","date_time","site_id","visitor_location_country_id","prop_country_id","prop_id","prop_starrating","prop_review_score","prop_brand_bool","prop_location_score1","prop_location_score2",
+"prop_log_historical_price","position","price_usd","promotion_flag","srch_destination_id","srch_length_of_stay","srch_booking_window",
+"srch_adults_count","srch_children_count","srch_room_count","srch_saturday_night_bool","random_bool","click_bool","booking_bool","price_usd_normalized.prices_normalized","consumer","Pclass","score")
+```
+
+
+# Split Data into Socio-Economic Data frames
+
+```{r}
+Data_p<-split(data, data$Pclass)
+
+Data_Pclass1 <- as.data.frame(Data_p[1])
+Data_Pclass2 <- as.data.frame(Data_p[2])
+Data_Pclass3 <- as.data.frame(Data_p[3])
+Data_Pclass4 <- as.data.frame(Data_p[4])
+Data_Pclass5 <- as.data.frame(Data_p[5])
+Data_Pclass6 <- as.data.frame(Data_p[6])
+
+
+
+names(Data_Pclass1 ) <- names(Data_Pclass2) <-names(Data_Pclass3) <-names(Data_Pclass4) <- names(Data_Pclass5) <-names(Data_Pclass6)  <- c("srch_id","date_time","site_id","visitor_location_country_id","prop_country_id","prop_id","prop_starrating","prop_review_score","prop_brand_bool","prop_location_score1","prop_location_score2",
+"prop_log_historical_price","position","price_usd","promotion_flag","srch_destination_id","srch_length_of_stay","srch_booking_window",
+"srch_adults_count","srch_children_count","srch_room_count","srch_saturday_night_bool","random_bool","click_bool","booking_bool","price_usd_normalized.prices_normalized","consumer","Pclass","score")
+
+
+```
+# Split Consumer Data into Socio-Economic class [28 DATASETS]
+```{r}
+# Data_consumer1_Pclass <- split(Data_consumer1, Data_consumer1[,33])
+# Data_consumer1_Pclass1 <- as.data.frame(Data_consumer1_Pclass[1])
+# Data_consumer1_Pclass2 <- as.data.frame(Data_consumer1_Pclass[2])
+# Data_consumer1_Pclass3 <- as.data.frame(Data_consumer1_Pclass[3])
+# Data_consumer1_Pclass4 <- as.data.frame(Data_consumer1_Pclass[4])
+# Data_consumer1_Pclass5 <- as.data.frame(Data_consumer1_Pclass[5])
+# Data_consumer1_Pclass6 <- as.data.frame(Data_consumer1_Pclass[6])
+# 
+# Data_consumer2_Pclass <- split(Data_consumer2, Data_consumer2[,33])
+# Data_consumer2_Pclass1 <- as.data.frame(Data_consumer2_Pclass[1])
+# Data_consumer2_Pclass2 <- as.data.frame(Data_consumer2_Pclass[2])
+# Data_consumer2_Pclass3 <- as.data.frame(Data_consumer2_Pclass[3])
+# Data_consumer2_Pclass4 <- as.data.frame(Data_consumer2_Pclass[4])
+# Data_consumer2_Pclass5 <- as.data.frame(Data_consumer2_Pclass[5])
+# Data_consumer2_Pclass6 <- as.data.frame(Data_consumer2_Pclass[6])
+# 
+# Data_consumer3_Pclass <- split(Data_consumer3, Data_consumer3[,33])
+# Data_consumer3_Pclass1 <- as.data.frame(Data_consumer3_Pclass[1])
+# Data_consumer3_Pclass2 <- as.data.frame(Data_consumer3_Pclass[2])
+# Data_consumer3_Pclass3 <- as.data.frame(Data_consumer3_Pclass[3])
+# Data_consumer3_Pclass4 <- as.data.frame(Data_consumer3_Pclass[4])
+# Data_consumer3_Pclass5 <- as.data.frame(Data_consumer3_Pclass[5])
+# Data_consumer3_Pclass6 <- as.data.frame(Data_consumer3_Pclass[6])
+# 
+# Data_consumer4_Pclass <- split(Data_consumer4, Data_consumer4[,33])
+# Data_consumer4_Pclass1 <- as.data.frame(Data_consumer4_Pclass[4])
+# Data_consumer4_Pclass2 <- as.data.frame(Data_consumer4_Pclass[2])
+# Data_consumer4_Pclass3 <- as.data.frame(Data_consumer4_Pclass[3])
+# Data_consumer4_Pclass4 <- as.data.frame(Data_consumer4_Pclass[4])
+# Data_consumer4_Pclass5 <- as.data.frame(Data_consumer4_Pclass[5])
+# Data_consumer4_Pclass6 <- as.data.frame(Data_consumer4_Pclass[6])
+```
+
+
+
+# Save Data files In RData
+```{r}
+save(Data_Pclass1,file = "data_Pclass1.RData")
+save(Data_Pclass2,file = "data_Pclass2.RData")
+save(Data_Pclass3,file = "data_Pclass3.RData")
+save(Data_Pclass4,file = "data_Pclass4.RData")
+save(Data_Pclass5,file = "data_Pclass5.RData")
+save(Data_Pclass6,file = "data_Pclass6.RData")
+```
+
+<!-- # Save Data files In RData -->
+<!-- ```{r} -->
+<!-- write.csv(Data_Pclass1,file = "datacsv_Pclass1.csv") -->
+<!-- write.csv(Data_Pclass2,file = "datacsv_Pclass2.csv") -->
+<!-- write.csv(Data_Pclass3,file = "datacsv_Pclass3.csv") -->
+<!-- write.csv(Data_Pclass4,file = "datacsv_Pclass4.csv") -->
+<!-- write.csv(Data_Pclass5,file = "datacsv_Pclass5.csv") -->
+<!-- write.csv(Data_Pclass6,file = "datacsv_Pclass6.csv") -->
+<!-- write.csv(Data_Pclass7,file = "datacsv_Pclass7.csv") -->
+<!-- ``` -->
+
+
+
+
+
+
+
+

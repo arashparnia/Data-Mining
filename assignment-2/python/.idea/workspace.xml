@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71845005-3d45-4eb1-868b-d1d7f287bb1b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/DCG.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nDCG.m" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/predictionToRelevancies.m" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../assignment2/assingment2.Rmd" afterPath="$PROJECT_DIR$/../assignment2/assingment2.Rmd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../assignment2/assingment2.nb.html" afterPath="$PROJECT_DIR$/../assignment2/assingment2.nb.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/algorithms.py" afterPath="$PROJECT_DIR$/algorithms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/kmeans_3d.py" afterPath="$PROJECT_DIR$/kmeans_3d.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
-    </list>
+    <list default="true" id="71845005-3d45-4eb1-868b-d1d7f287bb1b" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

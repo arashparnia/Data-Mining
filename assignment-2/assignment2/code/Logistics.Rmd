@@ -1,0 +1,367 @@
+---
+title: "R Logistic regression"
+output: html_notebook
+---
+
+```{r}
+rm(list=ls())
+rm(list = ls());
+```
+
+# Libraries
+```{r}
+# install.packages("foreign")
+require(foreign)
+# install.packages("nnet")
+require(nnet)
+# install.packages("ggplot2")
+require(ggplot2)
+# install.packages("reshape2")
+require(reshape2)
+# install.packages(plyr)
+require(plyr)
+# install.packages("MASS")
+library(MASS)
+# install.packages("Matrix")
+library(Matrix)
+# install.packages("FTRLProximal")
+library(FTRLProximal)
+ # install.packages("mlbench")
+library("mlbench")
+```
+
+# Set path
+```{r}
+WD <- setwd("C:/Users/Piet//Documents/Assignment2")
+```
+
+# Load data
+```{r}
+WD <- setwd("C://Users//Piet//Documents//Assignment2")
+load("data_Pclass1.RData")
+load("data_Pclass2.RData")
+load("data_Pclass3.RData")
+load("data_Pclass4.RData")
+load("data_Pclass5.RData") 
+load("data_Pclass6.RData")
+load("data_all0.RData")
+```
+
+
+# start loop [Manually] 
+```{r}
+Data<-Data_Pclass1
+i <- round(nrow(Data)/2)
+j <- nrow(Data)
+data <- Data[1:i,]
+datai <- Data[(i+1):j,]
+pricem <-data[,16]
+data[,16] <- pricem
+rm(pricem)
+pricem <-datai[,16]
+datai[,16] <- pricem
+rm(pricem)
+```
+
+# Check if data has any NA's
+```{r}
+ for (i in 1:19) {
+       print(table(is.na(data[,c(i)])))
+}
+```
+
+
+
+# Sort data
+```{r}
+data<- data[order(data$srch_id, -data$score),]
+
+datas <- split(data, data$consumer)
+data1 <- as.data.frame(datas[1])
+data2 <- as.data.frame(datas[2])
+data3 <- as.data.frame(datas[3])
+data4 <- as.data.frame(datas[4])
+
+data_fit1 <- data1[ ,c(1,19,4:6,8,11,16,3)]
+data_fit2 <- data2[ ,c(1,19,4:6,8,11,16,3)]
+data_fit3 <- data3[ ,c(1,19,4:6,8,11,16,3)]
+data_fit4 <- data4[ ,c(1,19,4:6,8,11,16,3)]
+
+fit1 <- lm(data_fit1[,2:8])
+fit2 <- lm(data_fit2[,2:8])
+fit3 <- lm(data_fit3[,2:8])
+fit4 <- lm(data_fit4[,2:8])
+# 
+# step1 <- stepAIC(fit1, direction="both")
+# step2 <- stepAIC(fit2, direction="both")
+# step3 <- stepAIC(fit3, direction="both")
+# step4 <- stepAIC(fit4, direction="both")
+
+datasi <- split(datai, datai$consumer)
+data1i <- as.data.frame(datasi[1])
+data2i <- as.data.frame(datasi[2])
+data3i <- as.data.frame(datasi[3])
+data4i <- as.data.frame(datasi[4])
+
+data_fit1i <- data1i[ ,c(1,19,4:6,8,11,16,3)]
+data_fit2i <- data2i[ ,c(1,19,4:6,8,11,16,3)]
+data_fit3i <- data3i[ ,c(1,19,4:6,8,11,16,3)]
+data_fit4i <- data4i[ ,c(1,19,4:6,8,11,16,3)]
+```
+
+
+
+
+## Load data for Logistic Regression
+```{r}
+dat1= data_fit1                                  # CHANGE
+dat2= data_fit2                                  # CHANGE
+dat3= data_fit3                                  # CHANGE
+dat4= data_fit4                                  # CHANGE
+```
+
+## Logistic Regression: Consumer type 1
+```{r}
+coeff<-NULL
+
+score <- dat1[,2]
+score[score > 0] <- 1     # Make score binary
+dat1[,2] <- score
+
+# Run model
+mylogit <- glm(dat1[,2] ~., data = dat1[,3:8], family = "binomial")
+
+
+rank_glm <- data.frame(data_fit1i[,1])
+rank_glm <-predict(mylogit, newdata = data_fit1i[,3:8], type = "response")
+rank_glm <- as.data.frame(rank_glm)
+
+log_regr1 <- data.frame(data_fit1i[,1])
+log_regr1[,2] <- data_fit1i[,9]
+log_regr1[,3] <- rank_glm
+log_regr1<-log_regr1[order(log_regr1[,1], -log_regr1[,3]),]
+
+coeff1 <- summary(mylogit)$coefficients
+```
+
+
+## Logistic Regression: Consumer type 2
+```{r}
+score <- dat2[,2]
+score[score > 0] <- 1     # Make score binary
+dat2[,2] <- score
+
+# Run model
+mylogit <- glm(dat2[,2] ~., data = dat2[,3:8], family = "binomial")
+
+rm(rank_glm)
+rank_glm <- data.frame(data_fit2i[,1])
+rank_glm <-predict(mylogit, newdata = data_fit2i[,3:8], type = "response")
+rank_glm <- as.data.frame(rank_glm)
+
+log_regr2 <- data.frame(data_fit2i[,1])
+log_regr2[,2] <- data_fit2i[,9]
+log_regr2[,3] <- rank_glm
+log_regr2<-log_regr2[order(log_regr2[,1], -log_regr2[,3]),]
+
+coeff2<- summary(mylogit)$coefficients
+```
+
+## Logistic Regression: Consumer type 3
+```{r}
+score <- dat3[,2]
+score[score > 0] <- 1     # Make score binary
+dat3[,2] <- score
+
+# Run model
+mylogit <- glm(dat3[,2] ~., data = dat3[,3:8], family = "binomial")
+
+rm(rank_glm)
+rank_glm <- data.frame(data_fit3i[,1])
+rank_glm <-predict(mylogit, newdata = data_fit3i[,3:8], type = "response")
+rank_glm <- as.data.frame(rank_glm)
+
+log_regr3 <- data.frame(data_fit3i[,1])
+log_regr3[,2] <- data_fit3i[,9]
+log_regr3[,3] <- rank_glm
+log_regr3<-log_regr3[order(log_regr3[,1], -log_regr3[,3]),]
+coeff3<- summary(mylogit)$coefficients
+```
+
+## Logistic Regression: Consumer type 4
+```{r}
+score <- dat4[,2]
+score[score > 0] <- 1     # Make score binary
+dat4[,2] <- score
+
+# Run model
+mylogit <- glm(dat4[,2] ~., data = dat4[,3:8], family = "binomial")
+
+rm(rank_glm)
+rank_glm <- data.frame(data_fit4i[,1])
+rank_glm <-predict(mylogit, newdata = data_fit4i[,3:8], type = "response")
+rank_glm <- as.data.frame(rank_glm)
+
+log_regr4 <- data.frame(data_fit4i[,1])
+log_regr4[,2] <- data_fit4i[,9]
+log_regr4[,3] <- rank_glm
+log_regr4<-log_regr4[order(log_regr4[,1], -log_regr4[,3]),]
+print(mylogit$coefficients)
+
+coeff4<- summary(mylogit)$coefficients
+```
+
+
+# Save data
+```{r}
+save(log_regr1, file = "log_6TESTregr1.RData")            #Change 1
+save(log_regr2, file = "log_6TESTregr2.RData")
+save(log_regr3, file = "log_6TESTregr3.RData")
+save(log_regr4, file = "log_6TESTregr4.RData")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ```{r} -->
+<!-- # FTRL Regression -->
+
+<!-- rm(score) -->
+<!-- score <- data_fit1[,1] -->
+<!-- score[score > 0] <- 1 -->
+<!-- data_fit1[,8] <- score -->
+
+<!-- dataf <-data_fit1[,2:8] -->
+
+<!--   a <- model.matrix(data_fit1[,7]~., data = dataf[,2:7]) -->
+<!--   b <- matrix(data_fit1[,7]) -->
+<!-- # Make an item matrix for Training and Testing data set -->
+
+
+<!--    item2<- model.matrix(~., data = dataf[,2:7]) -->
+
+<!--   set.seed(1) -->
+
+<!--   # Make binominal model -->
+<!--   mlogr <- cv.glmnet(a, b, alpha = 0, family = 'binomial', type.measure = 'deviance') -->
+<!--   logrpredic <- predict(mlogr , newx = item2, s = 'lambda.min', type='class') -->
+
+
+
+
+<!--    # OutputLRegT <- data.frame(PassengerId = train$PassengerId, Survived =logrpredic) -->
+<!--    # aLR <- table(OutputLRegT[ , 2][OutputLRegT[ , 2] %in% train$Survived])    # Estimate number of matches -->
+<!--    # aLR -->
+<!--    # PrecisionLogRegr <- aLR[1]/nrow(train)      # Estimate precision training data -->
+<!--    # PrecisionLogRegr -->
+
+<!-- ``` -->
+
+
+<!-- # FTRL Algorithm!! -->
+<!-- # Set up dataset -->
+<!-- ```{r} -->
+<!-- data1[,14] <- as.factor(data1[,14]) -->
+<!-- data1[,15] <- as.factor(data1[,15]) -->
+
+
+<!-- a <- as.numeric(as.character(data1[,19])) -->
+<!-- a <- as(a,"CsparseMatrix") -->
+<!-- a <- as(a,"dgCMatrix") -->
+
+
+<!-- data_FTRL <- data_fit1[,c(3:8)] -->
+
+
+<!-- data_FTRL[,1] <- a -->
+<!-- ``` -->
+
+<!-- # Train model [click_bool, NOT SCORE] [SOLVE PARAMATERS] -->
+<!-- ```{r}  -->
+
+<!-- mdl <- ftrlprox(classes ~ x.1 + x.2 + I(x.1^2) + I(x.2^2), dat, -->
+<!--                 a = 0.3, lambda = 5.0, alpha = 1.0) -->
+
+
+<!-- mdl <- ftrlprox(data1[,14]~ .,data_FTRL, lambda = 1e-2, alpha = 1, a = 0.3) -->
+<!-- print(mdl) -->
+<!-- ``` -->
+
+<!-- # Update model -->
+
+<!-- ```{r} -->
+<!-- X <- model.matrix(click_bool ~ ., data_FTRL)   # Convert data.frame to model.matrix -->
+
+<!-- mdl <- ftrlprox(X, data$click_bool, lambda = 1e-2, alpha = 1, a = 0.3)   # Train on first dataset -->
+
+<!-- # Generate more of the same data after the first training session -->
+
+<!-- # Update model using the new data. -->
+<!-- mdl <- update(mdl, X, data$click_bool) -->
+<!-- print(mdl) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- newdata = data[,c(7:12,14)] -->
+<!-- newdata -->
+<!-- score_modelFTRL <- mdl$theta[1]*newdata[,1]+ mdl$theta[2]*newdata[,2]+mdl$theta[3]*newdata[,3]+mdl$theta[4]*newdata[,4]+ -->
+<!--   mdl$theta[5]*newdata[,5]+mdl$theta[6]*newdata[,6]+mdl$theta[7]*newdata[,7] -->
+<!-- data$FTRL <- score_modelFTRL -->
+<!-- data<- data[order(data$srch_id, -data$FTRL),] -->
+
+<!-- data$click_bool <- as.numeric(as.character(data$click_bool)) -->
+
+<!-- Predictions <- data.frame(data$srch_id) -->
+<!-- Predictions[,2] <- data.frame(data$prop_id) -->
+<!-- Predictions[,3] <- data.frame(data$click_bool) +4*data.frame(data$booking_bool) -->
+
+<!-- Predictions[,4] <- data.frame(score_modelFTRL) -->
+<!-- Predictions[,5] <- ave(Predictions[,4], Predictions[,1], FUN = seq_along) -->
+<!-- ``` -->
+
+
+
+
+
+
+
+

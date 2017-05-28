@@ -1,0 +1,135 @@
+---
+title: "R NDCG"
+output: html_notebook
+---
+
+```{r}
+    rm(list=ls())
+```
+
+# Change setwd
+```{r}
+# install.packages("data.table")
+library(data.table)
+# install.packages("fastmatch")
+library("fastmatch")
+# install.packages("microbenchmark")
+library('microbenchmark')
+WD <- setwd("C:/Users/Piet/Documents/Assignment2/NDCGdata")
+DData <- fread(file = 'training_set_VU_DM_2014.csv', select = c("srch_id","click_bool","booking_bool","prop_id"))
+log_regr4 <- fread('predictions_KNeighborsClassifier.csv')
+```
+
+
+# Load your OWN data
+```{r}
+# load("P_C_Predictions_v0.2.RData")
+rm(log_regr1,log_regr2,log_regr3,log_regr4)
+load("log_2TESTregr4.RData")
+
+```
+# Fill in loaded data
+```{r}
+ranked_glm <- log_regr1 #  Prediction_6_4 # predictions#    C_Prediction_4 #log_regr          #CHANGE
+
+
+names(ranked_glm)[1] <- "srch_id"
+names(ranked_glm)[2] <- "prop_id"
+names(ranked_glm[3]) <- "score"
+```
+ 
+ 
+ 
+# Calculation /log2
+```{r}
+# Subset Data
+srch_idPiet <- unique(ranked_glm[,1])
+srch_DD <- unique(DData[,1])
+
+out1<- ranked_glm
+out2 <- subset(DData,  DData$srch_id %in% srch_idPiet)
+
+out <- merge(out1,out2 , by=c('srch_id','prop_id'))
+out<-out[order(out[,1], -out[,3]),]
+
+
+# Calculate basic score 
+out$scored <- out[,4] +4* out[,5]
+out$click_bool <- NULL
+out$booking_bool <- NULL
+
+# Set up Position
+out$position <- ave(out$srch_id, out$srch_id, FUN = seq_along)
+
+# Calculate discounted score
+out$Dscore <- (2^out$score - 1)/ log2(out$position + 1)
+sums <- aggregate(out$Dscore, by=list(out$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate max score possible
+out_max <- out[order(out$srch_id, -out$scored),]
+out_max$position <- ave(out_max$srch_id, out_max$srch_id, FUN = seq_along)
+out_max$Dscore <-  (2^out_max$score - 1)/ log2(out_max$position + 1)
+sums_max <- aggregate(out_max$Dscore, by=list(out_max$srch_id), FUN= sum)  # Sum each score for each group-id
+
+# Calculate NDCG
+a<- sums/ sums_max
+
+b <- is.na(a[1,])
+
+if(b[,2] == FALSE){
+  NDCG <- sum(a[,2])/nrow(a)
+}  else {
+   a <- a[2:nrow(a),]
+   NDCG <- sum(a[,2])/(nrow(a)-1)
+}
+print(NDCG)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- # [POSITION DETERMINED RANDOMLY] -->
+<!-- ```{r} -->
+<!-- # Subset Data -->
+<!-- srch_idPiet <- unique(ranked_glm[,1]) -->
+<!-- out <- subset(DData, srch_id %in% srch_idPiet) -->
+
+<!-- # Calculate basic score  -->
+<!-- out$scored <- out[,2] +4* out[,3] -->
+
+<!-- # Set up Position -->
+<!-- out$position <- ave(out$srch_id, out$srch_id, FUN = seq_along) -->
+
+
+<!-- # Delete variables -->
+<!-- out$click_bool <- NULL -->
+<!-- out$booking_bool <- NULL -->
+
+<!-- # Calculate discounted score -->
+<!-- out$Dscore <- (2^out$scored - 1)/ log2(out$position + 1) -->
+<!-- sums <- aggregate(out$Dscore, by=list(out$srch_id), FUN= sum)  # Sum each score for each group-id -->
+
+<!-- # Calculate max score possible -->
+<!-- out_max <- out[order(out$srch_id, -out$scored),] -->
+<!-- out_max$position <- ave(out_max$srch_id, out_max$srch_id, FUN = seq_along) -->
+<!-- out_max$Dscore <-  (2^out_max$score - 1)/ log2(out_max$position + 1) -->
+<!-- sums_max <- aggregate(out_max$Dscore, by=list(out_max$srch_id), FUN= sum)  # Sum each score for each group-id -->
+
+<!-- # Calculate NDCG -->
+<!-- a<- sums/ sums_max -->
+<!-- NDCG <- sum(a[,2])/nrow(sums) -->
+<!-- ``` -->
+
+
